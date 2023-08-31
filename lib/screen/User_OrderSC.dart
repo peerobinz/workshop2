@@ -21,19 +21,20 @@ class _UserOrderState extends State<UserOrder> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Center(
-          child: Text('เมนู',
-              style: TextStyle(
-                color: Color.fromARGB(255, 110, 56, 5),
-                fontSize: 30,
-                fontFamily: 'Inter',
-              )),
+          child: Text(
+            'เมนู',
+            style: TextStyle(
+              color: Color.fromARGB(255, 110, 56, 5),
+              fontSize: 30,
+            ),
+          ),
         ),
         actions: [
           IconButton(
             icon: const Icon(
               Icons.shopping_basket,
-              color: Color.fromARGB(255, 110, 56, 5), // เปลี่ยนสีไอคอน
-              size: 40.0, // เปลี่ยนขนาดไอคอน
+              color: Color.fromARGB(255, 110, 56, 5),
+              size: 40.0,
             ),
             onPressed: () {
               Navigator.push(
@@ -46,8 +47,8 @@ class _UserOrderState extends State<UserOrder> {
         leading: IconButton(
           icon: const Icon(
             Icons.home,
-            color: Color.fromARGB(255, 110, 56, 5), // เปลี่ยนสีไอคอน
-            size: 40.0, // เปลี่ยนขนาดไอคอน
+            color: Color.fromARGB(255, 110, 56, 5),
+            size: 40.0,
           ),
           onPressed: () {
             Navigator.push(
@@ -67,13 +68,22 @@ class _UserOrderState extends State<UserOrder> {
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
-              // onChanged: (value) {
-              //   // ใส่โค้ดที่ต้องการเมื่อมีการเปลี่ยนค่าใน TextField
-              // },
             ),
           ),
-          // ตัวอย่างเนื้อหาต่อที่คุณต้องการแสดงในหน้าจอ
-          // เช่น รายการอาหาร, รูปภาพ, และอื่น ๆ
+          Align(
+            alignment: Alignment.centerLeft, // จัดตำแหน่งอยู่ทางด้านซ้าย
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0), // ให้ระยะห่างด้านซ้าย
+              child: Text(
+                'รายการอาหาร',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 110, 56, 5),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

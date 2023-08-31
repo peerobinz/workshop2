@@ -34,12 +34,13 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => UserOrder()),
+                      MaterialPageRoute(
+                          builder: (context) => const UserOrder()),
                     );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 138, 28),
+                      const Color.fromARGB(255, 255, 138, 28),
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
@@ -69,7 +70,7 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromARGB(255, 255, 138, 28),
+                      const Color.fromARGB(255, 255, 138, 28),
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
