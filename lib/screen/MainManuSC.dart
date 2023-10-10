@@ -1,9 +1,13 @@
+//import screen
 import 'package:flutter/material.dart';
 
 import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_PeymentSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
 
+//import widget
+
+//import add-on
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
 
@@ -43,7 +47,11 @@ class _MainMenuState extends State<MainMenu> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
+<<<<<<< HEAD
                       AppColors.primaryColor,
+=======
+                      const Color.fromARGB(255, 255, 138, 28),
+>>>>>>> developer
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
@@ -118,7 +126,11 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
+<<<<<<< HEAD
                       AppColors.primaryColor,
+=======
+                      const Color.fromARGB(255, 255, 138, 28),
+>>>>>>> developer
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),

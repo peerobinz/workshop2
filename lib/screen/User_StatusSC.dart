@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/services_dialog.dart';
 import 'package:workshop2test/Text/my_text.dart';
@@ -123,3 +124,12 @@ class AppColors {
   static const Color errorColor = Color(0xFFB00020);
   // ... add more colors as needed
 }
+=======
+//import screen
+
+
+//import widget
+
+
+//import add-on
+>>>>>>> developer

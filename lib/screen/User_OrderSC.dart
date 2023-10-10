@@ -76,16 +76,26 @@ class _UserOrderState extends State<UserOrder> {
           child: Text(
             'เมนู',
             style: TextStyle(
+<<<<<<< HEAD
                 color: AppColors.secondaryColor,
                 fontSize: 30,
                 fontWeight: FontWeight.bold),
+=======
+              color: Color.fromARGB(255, 110, 56, 5),
+              fontSize: 30,
+            ),
+>>>>>>> developer
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(
               Icons.shopping_basket,
+<<<<<<< HEAD
               color: AppColors.secondaryColor,
+=======
+              color: Color.fromARGB(255, 110, 56, 5),
+>>>>>>> developer
               size: 40.0,
             ),
             onPressed: () {
@@ -101,7 +111,11 @@ class _UserOrderState extends State<UserOrder> {
         leading: IconButton(
           icon: const Icon(
             Icons.home,
+<<<<<<< HEAD
             color: AppColors.secondaryColor,
+=======
+            color: Color.fromARGB(255, 110, 56, 5),
+>>>>>>> developer
             size: 40.0,
           ),
           onPressed: () {
@@ -124,6 +138,7 @@ class _UserOrderState extends State<UserOrder> {
               ),
             ),
           ),
+<<<<<<< HEAD
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -134,10 +149,23 @@ class _UserOrderState extends State<UserOrder> {
                   color: AppColors.secondaryColor,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
+=======
+          Align(
+            alignment: Alignment.centerLeft, // จัดตำแหน่งอยู่ทางด้านซ้าย
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0), // ให้ระยะห่างด้านซ้าย
+              child: Text(
+                'รายการอาหาร',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 110, 56, 5),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+>>>>>>> developer
                 ),
               ),
             ),
           ),
+<<<<<<< HEAD
           Expanded(
             child: ListView.builder(
               itemCount: meals.length,
@@ -205,6 +233,8 @@ class _UserOrderState extends State<UserOrder> {
                 'ยืนยันรายการ (${selectedMeals.length} รายการ)',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               )),
+=======
+>>>>>>> developer
         ],
       ),
     );
