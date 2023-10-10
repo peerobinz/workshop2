@@ -105,7 +105,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEF8525),
+                      backgroundColor: AppColors.primaryColor,
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -124,4 +124,11 @@ class _OrderConfirmState extends State<OrderConfirm> {
       ),
     );
   }
+}
+
+class AppColors {
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
+  static const Color errorColor = Color(0xFFB00020);
+  // ... add more colors as needed
 }

@@ -23,8 +23,8 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   Future<Meal> _fetchMealData() async {
-    final response = await http.get(
-        Uri.parse('https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.mealId}'));
+    final response = await http.get(Uri.parse(
+        'https://www.themealdb.com/api/json/v1/1/lookup.php?i=${widget.mealId}'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -35,8 +35,7 @@ class _OrderDetailState extends State<OrderDetail> {
         name: mealData['strMeal'] ?? 'ไม่มีชื่อ',
         category: mealData['strCategory'] ?? 'ไม่มีหมวดหมู่',
         imageUrl: mealData['strMealThumb'] ?? 'url รูปไม่พร้อมใช้งาน',
-        instructions: mealData['strInstructions'] ?? 'ไม่มีคำแนะนำ', 
-        
+        instructions: mealData['strInstructions'] ?? 'ไม่มีคำแนะนำ',
       );
     } else {
       throw Exception('Failed to load meal details');
@@ -48,7 +47,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text('รายละเอียดเมนูอาหาร'),
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.primaryColor,
         actions: [
           IconButton(
             icon: Icon(Icons.add_shopping_cart),
@@ -89,14 +88,13 @@ class _OrderDetailState extends State<OrderDetail> {
                     children: [
                       Text(
                         meal.name,
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'หมวดหมู่: ${meal.category}',
                         style: TextStyle(fontSize: 18),
                       ),
-                     
-                      
                     ],
                   ),
                 ),
@@ -107,4 +105,11 @@ class _OrderDetailState extends State<OrderDetail> {
       ),
     );
   }
+}
+
+class AppColors {
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
+  static const Color errorColor = Color(0xFFB00020);
+  // ... add more colors as needed
 }

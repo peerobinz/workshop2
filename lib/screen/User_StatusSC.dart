@@ -25,7 +25,7 @@ class _UserStatusState extends State<UserStatus> {
             expandedHeight: 50.0, // ระบุความสูงของ SliverAppBar
             floating: false, // กำหนดให้ SliverAppBar ไม่ลอยขึ้นเมื่อเลื่อนลง
             pinned: true, // กำหนดให้ SliverAppBar คงอยู่ด้านบนเสมอ
-            flexibleSpace: FlexibleSpaceBar(
+            flexibleSpace: const FlexibleSpaceBar(
               title: Text(
                 'สถานะ',
                 style: TextStyle(
@@ -44,7 +44,8 @@ class _UserStatusState extends State<UserStatus> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const PaymentPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const PaymentPage()),
                   );
                 },
               ),
@@ -77,7 +78,7 @@ class _UserStatusState extends State<UserStatus> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('จำนวน: ${selectedMeal.quantity}'),
-                      Text(
+                      const Text(
                         'สถานะ: กำลังปรุง', // เพิ่มส่วนแสดงสถานะที่นี่
                         style: TextStyle(
                           color: Colors.orange, // สีส้มหรือสีที่คุณต้องการ

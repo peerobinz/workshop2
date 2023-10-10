@@ -38,15 +38,15 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
           ElevatedButton(
             onPressed: () {
-             showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const ConfirmPaymentDialog();
-                        },
-                      );
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const ConfirmPaymentDialog();
+                },
+              );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF8525), // สีพื้นหลังของปุ่ม
+              backgroundColor: AppColors.primaryColor, // สีพื้นหลังของปุ่ม
               padding: const EdgeInsets.symmetric(
                 vertical: 5,
                 horizontal: 67,
@@ -59,11 +59,12 @@ class _PaymentPageState extends State<PaymentPage> {
           ),
           const SizedBox(height: 20), // เพิ่มระยะห่างระหว่างปุ่ม
           ElevatedButton(
-            onPressed: () {  Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MainMenu()),
-          );
-          },
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MainMenu()),
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xBBBBBB), // สีพื้นหลังของปุ่ม
               padding: const EdgeInsets.symmetric(
@@ -81,4 +82,11 @@ class _PaymentPageState extends State<PaymentPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+}
+
+class AppColors {
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
+  static const Color errorColor = Color(0xFFB00020);
+  // ... add more colors as needed
 }

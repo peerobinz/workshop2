@@ -43,7 +43,7 @@ class _MainMenuState extends State<MainMenu> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 255, 138, 28),
+                      AppColors.primaryColor,
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
@@ -66,8 +66,7 @@ class _MainMenuState extends State<MainMenu> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 255, 138, 28),
-                    ),
+                        AppColors.primaryColor),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
                   ),
@@ -86,7 +85,7 @@ class _MainMenuState extends State<MainMenu> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 255, 138, 28),
+                      AppColors.primaryColor,
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
@@ -101,7 +100,7 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 255, 138, 28),
+                      AppColors.primaryColor,
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
@@ -118,4 +117,11 @@ class _MainMenuState extends State<MainMenu> {
       ),
     );
   }
+}
+
+class AppColors {
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
+  static const Color errorColor = Color(0xFFB00020);
+  // ... add more colors as needed
 }

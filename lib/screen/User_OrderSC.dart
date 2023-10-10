@@ -49,7 +49,7 @@ class _UserOrderState extends State<UserOrder> {
                 name: mealData['strMeal'] ?? 'ไม่มีชื่อ',
                 category: mealData['strCategory'] ?? 'ไม่มีหมวดหมู่',
                 imageUrl: mealData['strMealThumb'] ?? 'url รูปไม่พร้อมใช้งาน',
-                instructions: '', 
+                instructions: '',
               ))
           .toList();
 
@@ -76,16 +76,16 @@ class _UserOrderState extends State<UserOrder> {
           child: Text(
             'เมนู',
             style: TextStyle(
-              color: Color.fromARGB(255, 110, 56, 5),
-              fontSize: 30,
-            ),
+                color: AppColors.secondaryColor,
+                fontSize: 30,
+                fontWeight: FontWeight.bold),
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(
               Icons.shopping_basket,
-              color: Color.fromARGB(255, 110, 56, 5),
+              color: AppColors.secondaryColor,
               size: 40.0,
             ),
             onPressed: () {
@@ -101,7 +101,7 @@ class _UserOrderState extends State<UserOrder> {
         leading: IconButton(
           icon: const Icon(
             Icons.home,
-            color: Color.fromARGB(255, 110, 56, 5),
+            color: AppColors.secondaryColor,
             size: 40.0,
           ),
           onPressed: () {
@@ -131,9 +131,9 @@ class _UserOrderState extends State<UserOrder> {
               child: Text(
                 'รายการอาหาร',
                 style: TextStyle(
-                  color: Color.fromARGB(255, 110, 56, 5),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+                  color: AppColors.secondaryColor,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -187,6 +187,12 @@ class _UserOrderState extends State<UserOrder> {
             ),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                AppColors.primaryColor,
+              ),
+              fixedSize: MaterialStateProperty.all<Size>(const Size(250, 60)),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -201,4 +207,11 @@ class _UserOrderState extends State<UserOrder> {
       ),
     );
   }
+}
+
+class AppColors {
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
+  static const Color errorColor = Color(0xFFB00020);
+  // ... add more colors as needed
 }
