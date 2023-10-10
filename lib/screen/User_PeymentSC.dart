@@ -20,10 +20,9 @@ class _PaymentPageState extends State<PaymentPage> {
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.only(top: 50.0), // กำหนดระยะห่างด้านบน
-            child: const Text(
-              'ชำระเงิน',
-              style: MyText.headline,
-            ),
+            child: Text('ชำระเงิน',
+                style:
+                    MyText.headline.copyWith(color: AppColors.secondaryColor)),
           ),
           const Expanded(
             child: Center(

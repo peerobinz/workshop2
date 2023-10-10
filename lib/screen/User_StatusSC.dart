@@ -29,7 +29,7 @@ class _UserStatusState extends State<UserStatus> {
               title: Text(
                 'สถานะ',
                 style: TextStyle(
-                  color: Color.fromARGB(255, 110, 56, 5),
+                  color: AppColors.secondaryColor,
                   fontSize: 30,
                 ),
               ),
@@ -38,7 +38,7 @@ class _UserStatusState extends State<UserStatus> {
               IconButton(
                 icon: const Icon(
                   Icons.receipt,
-                  color: Color.fromARGB(255, 110, 56, 5),
+                  color: AppColors.secondaryColor,
                   size: 40.0,
                 ),
                 onPressed: () {
@@ -53,7 +53,7 @@ class _UserStatusState extends State<UserStatus> {
             leading: IconButton(
               icon: const Icon(
                 Icons.notification_add,
-                color: Color.fromARGB(255, 110, 56, 5),
+                color: AppColors.secondaryColor,
                 size: 40.0,
               ),
               onPressed: () {
@@ -101,7 +101,7 @@ class _UserStatusState extends State<UserStatus> {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFEF8525),
+          backgroundColor: AppColors.primaryColor,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -115,4 +115,11 @@ class _UserStatusState extends State<UserStatus> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+}
+
+class AppColors {
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
+  static const Color errorColor = Color(0xFFB00020);
+  // ... add more colors as needed
 }

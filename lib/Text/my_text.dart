@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MyText {
-   static const TextStyle basic = TextStyle(
+  static const TextStyle basic = TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
     fontSize: 20,
     color: Color(0xFF823D32),
   );
-
 
   static const TextStyle headline = TextStyle(
     fontFamily: 'Inter',
@@ -16,10 +15,10 @@ class MyText {
     color: Color(0xFF823D32),
   );
 
-  static const TextStyle subheading = TextStyle(
+  static TextStyle subheading = const TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
-    fontSize: 26,
+    fontSize: 18,
     color: Color(0xFF823D32),
   );
 
@@ -36,7 +35,6 @@ class MyText {
     fontSize: 28,
     color: Color.fromARGB(255, 249, 249, 249),
   );
-
 
   static const TextStyle buttonpayment = TextStyle(
     fontFamily: 'Inter',

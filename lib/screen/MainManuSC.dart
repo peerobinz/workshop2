@@ -47,6 +47,12 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            15), // Adjust this value for the desired corner radius
+                      ),
+                    ),
                   ),
                   child: const Text(
                     'สั่งอาหาร',
@@ -69,8 +75,14 @@ class _MainMenuState extends State<MainMenu> {
                         AppColors.primaryColor),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            15), // Adjust this value for the desired corner radius
+                      ),
+                    ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'สถานะ',
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
@@ -89,6 +101,12 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            15), // Adjust this value for the desired corner radius
+                      ),
+                    ),
                   ),
                   child: const Text(
                     'เช็คบิล',
@@ -104,6 +122,12 @@ class _MainMenuState extends State<MainMenu> {
                     ),
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            15), // Adjust this value for the desired corner radius
+                      ),
+                    ),
                   ),
                   child: const Text(
                     'เเอดมิน',

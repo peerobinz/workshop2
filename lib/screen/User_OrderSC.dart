@@ -187,22 +187,24 @@ class _UserOrderState extends State<UserOrder> {
             ),
           ),
           ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                AppColors.primaryColor,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  AppColors.primaryColor,
+                ),
+                fixedSize: MaterialStateProperty.all<Size>(const Size(250, 60)),
               ),
-              fixedSize: MaterialStateProperty.all<Size>(const Size(250, 60)),
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderConfirm(
-                        selectedMeals: selectedMeals.values.toList())),
-              );
-            },
-            child: Text('ยืนยันรายการ (${selectedMeals.length} รายการ)'),
-          ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderConfirm(
+                          selectedMeals: selectedMeals.values.toList())),
+                );
+              },
+              child: Text(
+                'ยืนยันรายการ (${selectedMeals.length} รายการ)',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )),
         ],
       ),
     );

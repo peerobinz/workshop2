@@ -21,7 +21,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
         child: Container(
           width: 390,
           height: 844,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color(0xFFFBFCFC),
             boxShadow: [
               BoxShadow(
@@ -36,25 +36,49 @@ class _OrderConfirmState extends State<OrderConfirm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(101, 34, 0, 0),
                     child: Text(
                       'รายการอาหาร',
-                      style: MyText.headline,
+                      style: MyText.headline
+                          .copyWith(color: AppColors.secondaryColor),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 68, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Container(
+                    padding: EdgeInsets.fromLTRB(15, 68, 0, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment
+                          .start, // Align children to the start/left
                       children: [
-                        const Text(
-                          'รายการ',
-                          style: MyText.subheading,
-                        ),
                         Text(
-                          'จำนวนรายการ: ${widget.selectedMeals.length}',
-                          style: MyText.subheading,
+                          'รายการอาหาร',
+                          style: MyText.buttoncomfirm
+                              .copyWith(color: AppColors.secondaryColor),
+                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(
+                            height:
+                                8), // Optional: to give a bit of space between the text and the row below
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .spaceBetween, // Separate the text and the button
+                          children: [
+                            Text(
+                              'จำนวนรายการ: ${widget.selectedMeals.length}',
+                              style: MyText.subheading
+                                  .copyWith(color: AppColors.secondaryColor),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Add your onPressed logic here
+                              },
+                              child: Text('+ เพิ่มรายการใหม่'),
+                              style: ElevatedButton.styleFrom(
+                                primary: AppColors.button2, // Background color
+                                onPrimary: Colors.white, // Text color
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -111,7 +135,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'ยืนยันรายการ',
                       style: MyText.buttoncomfirm,
                     ),
@@ -129,6 +153,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
 class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);
   static const Color secondaryColor = Color(0xFF026D81);
-  static const Color errorColor = Color(0xFFB00020);
+  static const Color button2 = Color(0xFF8DB5AD);
   // ... add more colors as needed
 }
