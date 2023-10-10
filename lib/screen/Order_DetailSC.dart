@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -114,12 +113,3 @@ class AppColors {
   static const Color errorColor = Color(0xFFB00020);
   // ... add more colors as needed
 }
-=======
-//import screen
-
-
-//import widget
-
-
-//import add-on
->>>>>>> developer
