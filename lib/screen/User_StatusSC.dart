@@ -3,7 +3,6 @@ import 'package:workshop2test/Dialog/services_dialog.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
-import 'package:workshop2test/screen/User_PeymentSC.dart';
 
 class UserStatus extends StatefulWidget {
   final List<Meal> selectedMeals;
@@ -44,8 +43,10 @@ class _UserStatusState extends State<UserStatus> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const PaymentPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const UserStatus(
+                                selectedMeals: [],
+                              )),
                   );
                 },
               ),
