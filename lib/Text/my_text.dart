@@ -4,7 +4,7 @@ class MyText {
   static const TextStyle basic = TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
-    fontSize: 20,
+    fontSize: 30,
     color: Color(0xFF823D32),
   );
 

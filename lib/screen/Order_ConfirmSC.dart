@@ -25,7 +25,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
         child: Container(
           width: 390,
           height: 844,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Color(0xFFFBFCFC),
             boxShadow: [
               BoxShadow(
@@ -41,7 +41,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(101, 34, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(101, 34, 0, 0),
                     child: Text(
                       'รายการอาหาร',
                       style: MyText.headline
@@ -49,7 +49,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(15, 68, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 68, 0, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment
                           .start, // Align children to the start/left
@@ -60,7 +60,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                               .copyWith(color: AppColors.secondaryColor),
                           textAlign: TextAlign.left,
                         ),
-                        SizedBox(
+                        const SizedBox(
                             height:
                                 8), // Optional: to give a bit of space between the text and the row below
                         Row(
@@ -76,10 +76,9 @@ class _OrderConfirmState extends State<OrderConfirm> {
                               onPressed: () {
                                 // Add your onPressed logic here
                               },
-                              child: Text('+ เพิ่มรายการใหม่'),
+                              child: const Text('+ เพิ่มรายการใหม่'),
                               style: ElevatedButton.styleFrom(
-                                primary: AppColors.button2, // Background color
-                                onPrimary: Colors.white, // Text color
+                                foregroundColor: Colors.white, backgroundColor: AppColors.button2, // Text color
                               ),
                             ),
                           ],
@@ -133,13 +132,16 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      elevation: 4,
+                      minimumSize: const Size(250, 60),
+                      backgroundColor:
+                          AppColors.primaryColor, // สีพื้นหลังของปุ่ม
+                      elevation: 4, // ความสูงของเงา
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(
+                            15), // ปรับความโค้งของมุมที่นี่
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'ยืนยันรายการ',
                       style: MyText.buttoncomfirm,
                     ),

@@ -7,29 +7,48 @@ class ServicesDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        'เรียกพนักงาน',
-        style: MyText.headline, // ใช้ MyText.headline TextStyle จาก MyText
+      title: const Column(
+        children: [
+          Icon(
+            Icons.people_sharp,
+            size: 70,
+            color: Color.fromARGB(255, 150, 21, 21),
+          ),
+          Text(
+            'คุณต้องการเรียกพนักงานหรือไม่',
+            style: MyText.button,
+          ),
+        ],
       ),
-      content: SizedBox.shrink(),
+      
       actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // ปิด Dialog
-          },
-          style: ButtonStyle(
-            textStyle: MaterialStateProperty.all(MyText.buttoncomfirm), // ใช้ MyText.buttoncomfirm TextStyle จาก MyText
-          ),
-          child: const Text('ยืนยัน'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // ปิด Dialog
-          },
-          style: ButtonStyle(
-            textStyle: MaterialStateProperty.all(MyText.button), // ใช้ MyText.button TextStyle จาก MyText
-          ),
-          child: const Text('ยกเลิก'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด Dialog
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(const Color(0xFFBBBBBB)), 
+                textStyle: MaterialStateProperty.all(MyText.button),
+                fixedSize: MaterialStateProperty.all(const Size(130, 40)),
+              ),
+              child: const Text('ยกเลิก'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(const Color(0xFF0E4E89)), 
+                textStyle: MaterialStateProperty.all(MyText.button),
+                fixedSize: MaterialStateProperty.all(const Size(130, 40)),
+                
+              ),
+              child: const Text('ยืนยัน'),
+            ),
+          ],
         ),
       ],
     );

@@ -3,6 +3,8 @@ import 'package:workshop2test/Dialog/services_dialog.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
+import 'package:workshop2test/screen/User_OrderSC.dart';
+import 'package:workshop2test/screen/User_PeymentSC.dart';
 
 class UserStatus extends StatefulWidget {
   final List<Meal> selectedMeals;
@@ -43,10 +45,10 @@ class _UserStatusState extends State<UserStatus> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                      MaterialPageRoute(
-                          builder: (context) => const UserStatus(
-                                selectedMeals: [],
-                              )),
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PaymentPage(selectedMeals: widget.selectedMeals),
+                    ),
                   );
                 },
               ),
@@ -98,18 +100,19 @@ class _UserStatusState extends State<UserStatus> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const MainMenu()),
+            MaterialPageRoute(builder: (context) => const UserOrder()),
           );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
           elevation: 4,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(15),
           ),
+          fixedSize: const Size(250, 60),
         ),
         child: const Text(
-          'HOME',
+          'สั่งอาหาร',
           style: MyText.buttoncomfirm,
         ),
       ),

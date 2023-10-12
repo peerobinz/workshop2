@@ -13,6 +13,7 @@ class UserOrder extends StatefulWidget {
 }
 
 class _UserOrderState extends State<UserOrder> {
+
   List<Meal> meals = [];
   Map<String, Meal> selectedMeals = {};
 
@@ -186,34 +187,68 @@ class _UserOrderState extends State<UserOrder> {
               },
             ),
           ),
+          
           ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  AppColors.primaryColor,
-                ),
-                fixedSize: MaterialStateProperty.all<Size>(const Size(250, 60)),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                AppColors.primaryColor,
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OrderConfirm(
-                          selectedMeals: selectedMeals.values.toList())),
-                );
-              },
-              child: Text(
-                'ยืนยันรายการ (${selectedMeals.length} รายการ)',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              )),
+              fixedSize: MaterialStateProperty.all<Size>(
+                  Size(250, 60)), // ปรับขนาดที่นี่
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15), // ปรับความโค้งที่นี่
+                ),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OrderConfirm(
+                      selectedMeals: selectedMeals.values.toList()),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '${selectedMeals.length}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: AppColors.secondaryColor,
+                    ),
+                  ),
+                ),
+                const Text(
+                  '   รายการที่รอส่ง',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                ),
+              ],
+            ),
+          )
         ],
       ),
+      
     );
   }
 }
+
+
+
+
 
 class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);
   static const Color secondaryColor = Color(0xFF026D81);
   static const Color errorColor = Color(0xFFB00020);
-  // ... add more colors as needed
 }

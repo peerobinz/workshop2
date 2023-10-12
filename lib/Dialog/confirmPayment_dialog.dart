@@ -7,44 +7,55 @@ class ConfirmPaymentDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+    return AlertDialog(
+      title: const Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+          Icon(
+            Icons.receipt_long_sharp,
+            size: 70,
+            color: Color.fromARGB(255, 150, 21, 21),
           ),
-          const SizedBox(height: 10),
-          const Icon(Icons.receipt, size: 57, color: Colors.green),
-          const SizedBox(height: 20),
-          const Text('ต้องการชำระเงินหรือไม่', style: MyText.basic),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // เมื่อกดปุ่ม "ยืนยัน"
-              // ทำสิ่งที่คุณต้องการเมื่อยืนยัน
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => WaitForPaymentPage(),
-                ),
-              );
-            },
-            child: const Text('ยืนยัน'),
+          Text(
+            'คุณต้องการชำระเงินหรือไม่',
+            style: MyText.button,
           ),
-          const SizedBox(height: 10),
         ],
       ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิด Dialog
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFFBBBBBB)),
+                textStyle: MaterialStateProperty.all(MyText.button),
+                fixedSize: MaterialStateProperty.all(const Size(100, 40)),
+              ),
+              child: const Text('ยกเลิก'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => WaitForPaymentPage(),
+                  ),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(const Color(0xFF0E4E89)),
+                textStyle: MaterialStateProperty.all(MyText.button),
+                fixedSize: MaterialStateProperty.all(const Size(100, 40)),
+              ),
+              child: const Text('ยืนยัน'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

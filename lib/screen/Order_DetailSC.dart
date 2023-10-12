@@ -46,11 +46,11 @@ class _OrderDetailState extends State<OrderDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายละเอียดเมนูอาหาร'),
+        title: const Text('รายละเอียดเมนูอาหาร'),
         backgroundColor: AppColors.primaryColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.add_shopping_cart),
+            icon: const Icon(Icons.add_shopping_cart),
             onPressed: () {
               // ส่งเมนูที่เลือกไปยังหน้า UserOrder
               Navigator.of(context).pop(mealData);
@@ -62,7 +62,7 @@ class _OrderDetailState extends State<OrderDetail> {
         future: mealData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -70,7 +70,7 @@ class _OrderDetailState extends State<OrderDetail> {
               child: Text('เกิดข้อผิดพลาด: ${snapshot.error}'),
             );
           } else if (!snapshot.hasData) {
-            return Center(
+            return const Center(
               child: Text('ไม่พบข้อมูล'),
             );
           }
@@ -88,12 +88,12 @@ class _OrderDetailState extends State<OrderDetail> {
                     children: [
                       Text(
                         meal.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'หมวดหมู่: ${meal.category}',
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ],
                   ),
@@ -111,5 +111,5 @@ class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);
   static const Color secondaryColor = Color(0xFF026D81);
   static const Color errorColor = Color(0xFFB00020);
-  // ... add more colors as needed
+  
 }

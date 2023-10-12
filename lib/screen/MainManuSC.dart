@@ -95,10 +95,10 @@ class _MainMenuState extends State<MainMenu> {
                 const SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PaymentPage()),
-                    );
+                 //  Navigator.push(
+                   //   context,
+                    //  MaterialPageRoute(builder: (context) => PaymentPage()),
+                 //   );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
