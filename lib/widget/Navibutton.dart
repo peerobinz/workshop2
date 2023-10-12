@@ -8,56 +8,65 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomeScreen(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('แนวตั้ง 6 ปุ่มติดต่อกัน'),
+        ),
+        body: MyWidget(),
+      ),
     );
   }
 }
 
-class MyHomeScreen extends StatelessWidget {
+class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My App'),
-      ),
-
-      // สร้างแถบนำทางแนวตั้ง
-      body: Stack(
-        children: <Widget>[
-          // สร้างพื้นหลังสีเทาสำหรับปิดเมนู
-          Positioned(
-            top: 0,
-            left: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.grey[200],
-              width: 60, // กำหนดความกว้างของแถบนำทาง
-            ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              // ตรวจสอบการกดปุ่มแรก
+              // ใส่โค้ดที่คุณต้องการในนี่
+            },
+            child: Text('ปุ่ม 1'),
           ),
-          // เมนูแถบนำทาง
-          Positioned(
-            top: 0,
-            left: 0,
-            bottom: 0,
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Home'),
-                  onTap: () {
-                    // เพิ่มโค้ดที่คุณต้องการเมื่อเลือก "Home"
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Settings'),
-                  onTap: () {
-                    // เพิ่มโค้ดที่คุณต้องการเมื่อเลือก "Settings"
-                  },
-                ),
-                // เพิ่มรายการอื่น ๆ ตามที่คุณต้องการ
-              ],
-            ),
+          ElevatedButton(
+            onPressed: () {
+              // ตรวจสอบการกดปุ่มที่สอง
+              // ใส่โค้ดที่คุณต้องการในนี่
+            },
+            child: Text('ปุ่ม 2'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // ตรวจสอบการกดปุ่มที่สาม
+              // ใส่โค้ดที่คุณต้องการในนี่
+            },
+            child: Text('ปุ่ม 3'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // ตรวจสอบการกดปุ่มที่สี่
+              // ใส่โค้ดที่คุณต้องการในนี่
+            },
+            child: Text('ปุ่ม 4'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // ตรวจสอบการกดปุ่มที่ห้า
+              // ใส่โค้ดที่คุณต้องการในนี่
+            },
+            child: Text('ปุ่ม 5'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // ตรวจสอบการกดปุ่มที่หก
+              // ใส่โค้ดที่คุณต้องการในนี่
+            },
+            child: Text('ปุ่ม 6'),
           ),
         ],
       ),
