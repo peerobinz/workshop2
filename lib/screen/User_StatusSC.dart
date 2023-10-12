@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/services_dialog.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/manu/meal.dart';
-import 'package:workshop2test/screen/MainManuSC.dart';
 import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_PeymentSC.dart';
 

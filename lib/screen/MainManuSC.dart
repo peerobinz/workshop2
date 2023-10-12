@@ -1,9 +1,7 @@
 //import screen
 import 'package:flutter/material.dart';
 
-
 import 'package:workshop2test/screen/User_OrderSC.dart';
-import 'package:workshop2test/screen/User_PeymentSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
 
 //import widget
@@ -95,10 +93,10 @@ class _MainMenuState extends State<MainMenu> {
                 const SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
-                 //  Navigator.push(
-                   //   context,
+                    //  Navigator.push(
+                    //   context,
                     //  MaterialPageRoute(builder: (context) => PaymentPage()),
-                 //   );
+                    //   );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -120,9 +118,7 @@ class _MainMenuState extends State<MainMenu> {
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                       AppColors.primaryColor,
@@ -142,31 +138,31 @@ class _MainMenuState extends State<MainMenu> {
                   ),
                 ),
                 const SizedBox(height: 50),
-          //ElevatedButton(
-          //  onPressed: () {
-            //  Navigator.push(
-             //   context,
-             //   MaterialPageRoute(builder: (context) => DatabaseTestPage()),
-            //  );
-           // },
-          //  style: ButtonStyle(
-          //    backgroundColor: MaterialStateProperty.all<Color>(
-           //     AppColors.primaryColor,
-           //   ),
-           //   fixedSize:
-           //       MaterialStateProperty.all<Size>(const Size(250, 60)),
-           //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-           //     RoundedRectangleBorder(
-            //      borderRadius: BorderRadius.circular(
-            //          15), // Adjust this value for the desired corner radius
-            //    ),
-           //   ),
-         //   ),
-         //   child: const Text(
-          //    'ทดสอบการเชื่อมต่อ',
-          //    style: TextStyle(color: Colors.white, fontSize: 20),
-         //   ),
-         // ),
+                //ElevatedButton(
+                //  onPressed: () {
+                //  Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => DatabaseTestPage()),
+                //  );
+                // },
+                //  style: ButtonStyle(
+                //    backgroundColor: MaterialStateProperty.all<Color>(
+                //     AppColors.primaryColor,
+                //   ),
+                //   fixedSize:
+                //       MaterialStateProperty.all<Size>(const Size(250, 60)),
+                //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                //     RoundedRectangleBorder(
+                //      borderRadius: BorderRadius.circular(
+                //          15), // Adjust this value for the desired corner radius
+                //    ),
+                //   ),
+                //   ),
+                //   child: const Text(
+                //    'ทดสอบการเชื่อมต่อ',
+                //    style: TextStyle(color: Colors.white, fontSize: 20),
+                //   ),
+                // ),
               ],
             ),
           ],
