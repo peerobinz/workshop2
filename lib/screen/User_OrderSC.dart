@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:workshop2test/manu/meal.dart';
 import 'dart:convert';
+import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
+
 import 'package:workshop2test/screen/Order_ConfirmSC.dart';
+import 'package:workshop2test/screen/Order_DetailSC.dart';
+// ... [อื่น ๆ imports ที่เหมาะสม]
 
 class UserOrder extends StatefulWidget {
   const UserOrder({Key? key}) : super(key: key);
@@ -13,17 +16,28 @@ class UserOrder extends StatefulWidget {
 }
 
 class _UserOrderState extends State<UserOrder> {
-
   List<Meal> meals = [];
   Map<String, Meal> selectedMeals = {};
 
   void _incrementMealQuantity(Meal meal) {
-    setState(() {
-      if (selectedMeals.containsKey(meal.id)) {
-        selectedMeals[meal.id]!.quantity++;
-      }
-    });
-  }
+  setState(() {
+    if (selectedMeals.containsKey(meal.id)) {
+      selectedMeals[meal.id]!.quantity++;
+    } else {
+      // สร้าง Meal ใหม่ที่มี quantity เป็น 1 และเพิ่มลงใน map
+      Meal newMeal = Meal(
+        id: meal.id,
+        name: meal.name,
+        category: meal.category,
+        imageUrl: meal.imageUrl,
+        instructions: meal.instructions,
+        quantity: 1, // ตั้งค่า quantity เป็น 1
+      );
+      selectedMeals[meal.id] = newMeal;
+    }
+  });
+}
+
 
   void _decrementMealQuantity(Meal meal) {
     setState(() {
@@ -158,15 +172,6 @@ class _UserOrderState extends State<UserOrder> {
                       IconButton(
                         onPressed: () {
                           setState(() {
-                            _decrementMealQuantity(meal);
-                          });
-                        },
-                        icon: const Icon(Icons.remove),
-                      ),
-                      Text(meal.quantity.toString()),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
                             _incrementMealQuantity(meal);
                           });
                         },
@@ -175,19 +180,17 @@ class _UserOrderState extends State<UserOrder> {
                     ],
                   ),
                   onTap: () {
-                    setState(() {
-                      final mealId = meal.id;
-                      if (!selectedMeals.containsKey(mealId)) {
-                        meal.quantity = 1;
-                        selectedMeals[mealId] = meal;
-                      }
-                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OrderDetail(mealId: meal.id),
+                      ),
+                    );
                   },
                 );
               },
             ),
           ),
-          
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(
@@ -238,14 +241,9 @@ class _UserOrderState extends State<UserOrder> {
           )
         ],
       ),
-      
     );
   }
 }
-
-
-
-
 
 class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);

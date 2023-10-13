@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/confirmOder_dialog.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/manu/meal.dart';
+import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
 
-//import widget
-
-//import add-on
 class OrderConfirm extends StatefulWidget {
   final List<Meal> selectedMeals;
-
   const OrderConfirm({Key? key, required this.selectedMeals}) : super(key: key);
 
   @override
@@ -62,7 +59,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                         ),
                         const SizedBox(
                             height:
-                                8), // Optional: to give a bit of space between the text and the row below
+                                8), 
                         Row(
                           mainAxisAlignment: MainAxisAlignment
                               .spaceBetween, // Separate the text and the button
@@ -72,15 +69,27 @@ class _OrderConfirmState extends State<OrderConfirm> {
                               style: MyText.subheading
                                   .copyWith(color: AppColors.secondaryColor),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Add your onPressed logic here
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const UserOrder()),
+                                );
                               },
-                              child: const Text('+ เพิ่มรายการใหม่'),
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, backgroundColor: AppColors.button2, // Text color
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 15),
+                                decoration: BoxDecoration(
+                                  color: AppColors.button2,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Text(
+                                  '+ เพิ่มรายการใหม่',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ],
@@ -92,11 +101,11 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       itemBuilder: (context, index) {
                         final selectedMeal = widget.selectedMeals[index];
                         return ListTile(
-                          title: Text(selectedMeal.name),
-                          subtitle: Text(selectedMeal.category),
-                          leading: Image.network(selectedMeal.imageUrl),
+                          title: Text(selectedMeal.name),//data
+                          subtitle: Text(selectedMeal.category),//data
+                          leading: Image.network(selectedMeal.imageUrl),//data
                           trailing: Text(
-                              'จำนวน: ${selectedMeal.quantity}'), // แสดงจำนวน
+                              'จำนวน: ${selectedMeal.quantity}'), //data
                         );
                       },
                     ),
@@ -120,6 +129,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       );
 
                       if (result == true) {
+                        
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,

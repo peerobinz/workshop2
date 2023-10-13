@@ -1,9 +1,6 @@
 //import screen
 import 'package:flutter/material.dart';
-
-
 import 'package:workshop2test/screen/User_OrderSC.dart';
-import 'package:workshop2test/screen/User_PeymentSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
 
 //import widget
