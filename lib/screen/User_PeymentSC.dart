@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/confirmPayment_dialog.dart';
 import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
+import 'package:intl/intl.dart'; //เวลา
 
 class PaymentPage extends StatefulWidget {
   final List<Meal> selectedMeals;
@@ -36,21 +37,22 @@ class _PaymentPageState extends State<PaymentPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'โต๊ะ: 5',
+                  'โต๊ะ 5',
                   style: TextStyle(
                       color: AppColors.secondaryColor,
                       fontSize: 25,
                       fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'วันที่: ${DateTime.now().toLocal().toString().split(' ')[0]}',
+                      'วันที่: ${DateFormat('dd/MM/').format(DateTime.now().toLocal())}${DateTime.now().year + 543}',
                       style: const TextStyle(fontSize: 20),
                     ),
                     Text(
-                      'เวลา: ${DateTime.now().toLocal().toString().split(' ')[1].split('.')[0]}',
+                      'เวลา: ${DateFormat('HH:mm').format(DateTime.now().toLocal())}',
                       style: const TextStyle(fontSize: 20),
                     ),
                   ],
@@ -66,11 +68,16 @@ class _PaymentPageState extends State<PaymentPage> {
           Expanded(
             child: Padding(
               padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
+                  const EdgeInsets.only(left: 26.0, right: 16.0, bottom: 16.0),
               child: ListView(
                 children: [
-                  const SizedBox(height: 5),
-                  const Text('รายการสินค้า:', style: TextStyle(fontSize: 20)),
+                  const Text(
+                    'รายการสินค้า',
+                    style: TextStyle(
+                        color: AppColors.secondaryColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 10),
                   ListView.builder(
                     shrinkWrap:
@@ -90,8 +97,14 @@ class _PaymentPageState extends State<PaymentPage> {
                     color: Colors.black,
                     thickness: 1,
                   ),
-                  const Text('ยอดเงิน: ฿1000', style: TextStyle(fontSize: 20)),
-                  const SizedBox(height: 10),
+                  const Text('รวมทั้งสิน ', style: TextStyle(fontSize: 20)),
+                  const SizedBox(height: 5),
+                  const Text('Vat 7 % ', style: TextStyle(fontSize: 20)),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'รวมสุทธิ ',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
             ),
@@ -154,3 +167,6 @@ class AppColors {
   static const Color errorColor = Color(0xFFB00020);
   static const Color errorColor02 = Color(0xFFBBBBBB);
 }
+
+
+

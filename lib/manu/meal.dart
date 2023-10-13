@@ -1,3 +1,4 @@
+
 enum Status {
   pending,
   completed, //สถานะ
@@ -28,4 +29,5 @@ class Meal {
 
   set status(Status status) {}
 }
+
 
