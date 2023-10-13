@@ -48,15 +48,7 @@ class _OrderDetailState extends State<OrderDetail> {
       appBar: AppBar(
         title: const Text('รายละเอียดเมนูอาหาร'),
         backgroundColor: AppColors.primaryColor,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_shopping_cart),
-            onPressed: () {
-              // ส่งเมนูที่เลือกไปยังหน้า UserOrder
-              Navigator.of(context).pop(mealData);
-            },
-          ),
-        ],
+       
       ),
       body: FutureBuilder<Meal>(
         future: mealData,
@@ -95,6 +87,34 @@ class _OrderDetailState extends State<OrderDetail> {
                         'หมวดหมู่: ${meal.category}',
                         style: const TextStyle(fontSize: 18),
                       ),
+                      const TextField(
+                        decoration: InputDecoration(
+                          labelText: 'หมายเหตุ',
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () {
+                              // Logic ลดจำนวน
+                            },
+                          ),
+                          const Text('1'), // แสดงจำนวนที่เลือก
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              // Logic เพิ่มจำนวน
+                            },
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Logic ส่งข้อมูลกลับไปยังหน้า UserOrder
+                        },
+                        child: Text('ยืนยัน'),
+                      ),
                     ],
                   ),
                 ),
@@ -111,5 +131,4 @@ class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);
   static const Color secondaryColor = Color(0xFF026D81);
   static const Color errorColor = Color(0xFFB00020);
-  
 }
