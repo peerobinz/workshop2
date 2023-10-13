@@ -6,7 +6,6 @@ import 'package:workshop2test/screen/MainManuSC.dart';
 
 import 'package:workshop2test/screen/Order_ConfirmSC.dart';
 import 'package:workshop2test/screen/Order_DetailSC.dart';
-// ... [อื่น ๆ imports ที่เหมาะสม]
 
 class UserOrder extends StatefulWidget {
   const UserOrder({Key? key}) : super(key: key);
@@ -20,24 +19,23 @@ class _UserOrderState extends State<UserOrder> {
   Map<String, Meal> selectedMeals = {};
 
   void _incrementMealQuantity(Meal meal) {
-  setState(() {
-    if (selectedMeals.containsKey(meal.id)) {
-      selectedMeals[meal.id]!.quantity++;
-    } else {
-      // สร้าง Meal ใหม่ที่มี quantity เป็น 1 และเพิ่มลงใน map
-      Meal newMeal = Meal(
-        id: meal.id,
-        name: meal.name,
-        category: meal.category,
-        imageUrl: meal.imageUrl,
-        instructions: meal.instructions,
-        quantity: 1, // ตั้งค่า quantity เป็น 1
-      );
-      selectedMeals[meal.id] = newMeal;
-    }
-  });
-}
-
+    setState(() {
+      if (selectedMeals.containsKey(meal.id)) {
+        selectedMeals[meal.id]!.quantity++;
+      } else {
+        // สร้าง Meal ใหม่ที่มี quantity เป็น 1 และเพิ่มลงใน map
+        Meal newMeal = Meal(
+          id: meal.id,
+          name: meal.name,
+          category: meal.category,
+          imageUrl: meal.imageUrl,
+          instructions: meal.instructions,
+          quantity: 1, // ตั้งค่า quantity เป็น 1
+        );
+        selectedMeals[meal.id] = newMeal;
+      }
+    });
+  }
 
   void _decrementMealQuantity(Meal meal) {
     setState(() {
