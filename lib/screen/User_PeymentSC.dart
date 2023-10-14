@@ -123,7 +123,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(250, 60),
+                    minimumSize: const Size(350, 60),
                     backgroundColor: AppColors.primaryColor,
                     elevation: 4,
                     shape: RoundedRectangleBorder(
@@ -142,7 +142,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(250, 60),
+                    minimumSize: const Size(350, 60),
                     backgroundColor: AppColors.errorColor02,
                     elevation: 4,
                     shape: RoundedRectangleBorder(

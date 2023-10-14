@@ -142,7 +142,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(250, 60),
+                      minimumSize: const Size(350, 60),
                       backgroundColor:
                           AppColors.primaryColor, // สีพื้นหลังของปุ่ม
                       elevation: 4, // ความสูงของเงา

@@ -3,10 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
-
 import 'package:workshop2test/screen/Order_ConfirmSC.dart';
 import 'package:workshop2test/screen/Order_DetailSC.dart';
-// ... [อื่น ๆ imports ที่เหมาะสม]
 
 class UserOrder extends StatefulWidget {
   const UserOrder({Key? key}) : super(key: key);
@@ -19,25 +17,32 @@ class _UserOrderState extends State<UserOrder> {
   List<Meal> meals = [];
   Map<String, Meal> selectedMeals = {};
 
-  void _incrementMealQuantity(Meal meal) {
-  setState(() {
-    if (selectedMeals.containsKey(meal.id)) {
-      selectedMeals[meal.id]!.quantity++;
-    } else {
-      // สร้าง Meal ใหม่ที่มี quantity เป็น 1 และเพิ่มลงใน map
-      Meal newMeal = Meal(
-        id: meal.id,
-        name: meal.name,
-        category: meal.category,
-        imageUrl: meal.imageUrl,
-        instructions: meal.instructions,
-        quantity: 1, // ตั้งค่า quantity เป็น 1
-      );
-      selectedMeals[meal.id] = newMeal;
-    }
-  });
-}
+  int _calculateTotalQuantity(Map<String, Meal> selectedMeals) {
+    int totalQuantity = 0;
+    selectedMeals.forEach((key, meal) {
+      totalQuantity +=
+          meal.quantity; // ตรวจสอบว่าคุณมี property `quantity` ใน class `Meal`
+    });
+    return totalQuantity;
+  }
 
+  void _incrementMealQuantity(Meal meal) {
+    setState(() {
+      if (selectedMeals.containsKey(meal.id)) {
+        selectedMeals[meal.id]!.quantity++;
+      } else {
+        Meal newMeal = Meal(
+          id: meal.id,
+          name: meal.name,
+          category: meal.category,
+          imageUrl: meal.imageUrl,
+          instructions: meal.instructions,
+          quantity: 1,
+        );
+        selectedMeals[meal.id] = newMeal;
+      }
+    });
+  }
 
   void _decrementMealQuantity(Meal meal) {
     setState(() {
@@ -169,23 +174,38 @@ class _UserOrderState extends State<UserOrder> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _incrementMealQuantity(meal);
-                          });
+                      InkWell(
+                        onTap: () {
+                          _incrementMealQuantity(meal);
                         },
-                        icon: const Icon(Icons.add),
+                        child: Container(
+                          padding: const EdgeInsets.all(
+                              9), // ปรับ padding ตามที่คุณต้องการ
+                          decoration: const BoxDecoration(
+                            color:
+                                AppColors.errorColorOrenc, // ใช้สีที่คุณต้องการ
+                            shape:
+                                BoxShape.circle, // ทำให้ Container มีรูปทรงกลม
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white, // สีของไอคอน
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    final selectedMeal = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => OrderDetail(mealId: meal.id),
                       ),
-                    );
+                    ) as Meal?;
+                    if (selectedMeal != null) {
+                      // Logic ที่จะทำเมื่อมีการเลือกรายการอาหาร
+                      _incrementMealQuantity(selectedMeal);
+                    }
                   },
                 );
               },
@@ -196,11 +216,10 @@ class _UserOrderState extends State<UserOrder> {
               backgroundColor: MaterialStateProperty.all<Color>(
                 AppColors.primaryColor,
               ),
-              fixedSize: MaterialStateProperty.all<Size>(
-                  Size(250, 60)), // ปรับขนาดที่นี่
+              fixedSize: MaterialStateProperty.all<Size>(const Size(250, 60)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15), // ปรับความโค้งที่นี่
+                  borderRadius: BorderRadius.circular(15),
                 ),
               ),
             ),
@@ -224,7 +243,7 @@ class _UserOrderState extends State<UserOrder> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    '${selectedMeals.length}',
+                    '${_calculateTotalQuantity(selectedMeals)}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -249,4 +268,6 @@ class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);
   static const Color secondaryColor = Color(0xFF026D81);
   static const Color errorColor = Color(0xFFB00020);
+  static const Color errorColor02 = Color(0xFFBBBBBB);
+  static const Color errorColorOrenc = Color(0xFFED6335);
 }

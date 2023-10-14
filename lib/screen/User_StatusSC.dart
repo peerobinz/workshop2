@@ -109,7 +109,7 @@ class _UserStatusState extends State<UserStatus> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          fixedSize: const Size(250, 60),
+          fixedSize: const Size(350, 60),
         ),
         child: const Text(
           'สั่งอาหาร',
