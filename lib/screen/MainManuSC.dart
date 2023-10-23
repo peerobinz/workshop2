@@ -1,5 +1,8 @@
 //import screen
 import 'package:flutter/material.dart';
+
+import 'package:workshop2test/admin/Tabbar/MainAdmin.dart';
+
 import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
 
@@ -84,19 +87,14 @@ class _MainMenuState extends State<MainMenu> {
                       ),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'สถานะ',
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
-                  onPressed: () {
-                 //  Navigator.push(
-                   //   context,
-                    //  MaterialPageRoute(builder: (context) => PaymentPage()),
-                 //   );
-                  },
+                  onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                       AppColors.primaryColor,
@@ -118,11 +116,11 @@ class _MainMenuState extends State<MainMenu> {
                 const SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
-                   // Navigator.push(
-                    // context,
-                    //  MaterialPageRoute(
-                   //       builder: (context) => const ),
-                   // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MainAdmin()),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -142,32 +140,7 @@ class _MainMenuState extends State<MainMenu> {
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),
-                const SizedBox(height: 50),
-          //ElevatedButton(
-          //  onPressed: () {
-            //  Navigator.push(
-             //   context,
-             //   MaterialPageRoute(builder: (context) => DatabaseTestPage()),
-            //  );
-           // },
-          //  style: ButtonStyle(
-          //    backgroundColor: MaterialStateProperty.all<Color>(
-           //     AppColors.primaryColor,
-           //   ),
-           //   fixedSize:
-           //       MaterialStateProperty.all<Size>(const Size(250, 60)),
-           //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-           //     RoundedRectangleBorder(
-            //      borderRadius: BorderRadius.circular(
-            //          15), // Adjust this value for the desired corner radius
-            //    ),
-           //   ),
-         //   ),
-         //   child: const Text(
-          //    'ทดสอบการเชื่อมต่อ',
-          //    style: TextStyle(color: Colors.white, fontSize: 20),
-         //   ),
-         // ),
+                const SizedBox(height: 20),
               ],
             ),
           ],
