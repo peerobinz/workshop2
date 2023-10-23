@@ -30,7 +30,7 @@ class _Admin_StockState extends State<Admin_Stock> {
                 alignment: Alignment.bottomCenter, // ทำให้ชิดกับขอบล่าง
                 child: SizedBox(
                   width: 900,
-                  height: 50, // ปรับขนาดตามที่ต้องการ
+                  height: 40, // ปรับขนาดตามที่ต้องการ
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'ค้นหารายการสินค้า...',
@@ -38,6 +38,7 @@ class _Admin_StockState extends State<Admin_Stock> {
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.blueAccent),
                       ),
+                      suffixIcon: Icon(Icons.search, color: Colors.grey,size: 30,),
                     ),
                   ),
                 ),
@@ -52,9 +53,25 @@ class _Admin_StockState extends State<Admin_Stock> {
                       builder: (context) => const Admin_StockAdd()),
                 );
               },
-              icon: const Icon(Icons.add),
-              label: const Text('เพิ่มรายการ'),
-            ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: AppColors.tabelGreen, width: 2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 30.0),
+              ),
+              icon: const Icon(
+                Icons.add,
+                color: AppColors.tabelGreen,
+                size: 30,
+              ),
+              label: const Text(
+                'เพิ่มรายการ',
+                style: TextStyle(color: AppColors.tabelGreen, fontSize: 20),
+              ),
+            )
           ],
         ),
       ),
