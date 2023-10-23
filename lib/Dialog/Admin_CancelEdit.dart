@@ -12,12 +12,12 @@ class Admin_CancelEdit extends StatelessWidget {
       title: const Column(
         children: [
           Icon(
-            Icons.edit_calendar_outlined,
+            Icons.close,
             size: 100,
             color: Color.fromARGB(255, 150, 21, 21),
           ),
           Text(
-            'คุณต้องการแก้ไขต่อหรือไม่',
+            'คุณต้องการยกเลิกหรือไม่',
             style: MyText.basic,
           ),
         ],
@@ -28,11 +28,7 @@ class Admin_CancelEdit extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => Admin_Stock(),
-                  ),
-                );
+                Navigator.of(context).pop(true); // คืนค่า true
               
               },
               style: ButtonStyle(
@@ -45,7 +41,7 @@ class Admin_CancelEdit extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                 Navigator.of(context).pop(); // ปิด Dialog
+                 Navigator.of(context).pop(false); // ปิด Dialog
               },
               style: ButtonStyle(
                 backgroundColor:

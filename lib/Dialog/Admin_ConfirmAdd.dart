@@ -40,11 +40,7 @@ class Admin_ConfirmAdd extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => Admin_Stock(),
-                  ),
-                );
+               Navigator.of(context).pop(true); 
               },
               style: ButtonStyle(
                 backgroundColor:

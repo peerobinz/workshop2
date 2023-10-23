@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:workshop2test/Dialog/Admin_CancelEdit.dart';
 import 'package:workshop2test/Dialog/Admin_ConfirmAdd.dart';
+import 'package:workshop2test/Dialog/Admin_ConfirmEdit.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -46,12 +48,12 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(50.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(left: 350.0),
+              padding: EdgeInsets.only(left: 250.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -164,11 +166,22 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                         Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Admin_Stock()),
-                    );
+                      onPressed: () async {
+                        bool? result = await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const Admin_CancelEdit();
+                          },
+                        );
+
+                        if (result == false) {
+                          // ทำการนำทางไปยังหน้า Admin_Stock เมื่อกดปุ่ม ยืนยัน
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => Admin_Stock(),
+                            ),
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -181,15 +194,22 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        bool? result = await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const Admin_ConfirmAdd();
+                          },
+                        );
 
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const Admin_ConfirmAdd();
-                      },
-                    );
-
+                        if (result == true) {
+                          // ทำการนำทางไปยังหน้า Admin_Stock เมื่อกดปุ่ม ยืนยัน
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => Admin_Stock(),
+                            ),
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor:

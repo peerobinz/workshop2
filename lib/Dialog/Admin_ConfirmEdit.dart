@@ -28,7 +28,7 @@ class Admin_ConfirmEdit extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // ปิด Dialog
+                Navigator.of(context).pop(); 
               },
               style: ButtonStyle(
                 backgroundColor:
@@ -40,11 +40,7 @@ class Admin_ConfirmEdit extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => Admin_Stock(),
-                  ),
-                );
+                Navigator.of(context).pop(true); // คืนค่า true
               },
               style: ButtonStyle(
                 backgroundColor:

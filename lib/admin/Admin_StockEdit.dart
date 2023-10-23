@@ -5,7 +5,7 @@ import 'package:workshop2test/Text/my_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
+import 'package:workshop2test/admin/Admin_Stock.dart';
 
 class Admin_StockEdit extends StatefulWidget {
   const Admin_StockEdit({super.key});
@@ -18,6 +18,7 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
   String? selectedProduct;
   File? _image;
   final picker = ImagePicker();
+
 
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -39,7 +40,7 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'รายละเอียดสินค้า',
+          'แก้ไขรายละเอียดสินค้า',
           style: TextStyle(
               color: AppColors.secondaryColor,
               fontWeight: FontWeight.bold,
@@ -47,12 +48,12 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(50.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(left: 350.0),
+              padding: EdgeInsets.only(left: 250.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -165,14 +166,22 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      
-                          onPressed: () {
-                        showDialog(
+                       onPressed: () async {
+                        bool? result = await showDialog<bool>(
                           context: context,
                           builder: (BuildContext context) {
                             return const Admin_CancelEdit();
                           },
                         );
+
+                        if (result == false) {
+                          // ทำการนำทางไปยังหน้า Admin_Stock เมื่อกดปุ่ม ยืนยัน
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => Admin_Stock(),
+                            ),
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -185,13 +194,22 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
-                      onPressed: () {
-                        showDialog(
+                      onPressed: () async {
+                        bool? result = await showDialog<bool>(
                           context: context,
                           builder: (BuildContext context) {
                             return const Admin_ConfirmEdit();
                           },
                         );
+
+                        if (result == true) {
+                          // ทำการนำทางไปยังหน้า Admin_Stock เมื่อกดปุ่ม ยืนยัน
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => Admin_Stock(),
+                            ),
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor:
