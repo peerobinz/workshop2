@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Text/my_text.dart';
-import 'package:workshop2test/admin/Admin_Stock.dart';
+
 
 
 class Admin_CancelEdit extends StatelessWidget {

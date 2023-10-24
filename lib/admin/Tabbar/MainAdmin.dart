@@ -46,7 +46,7 @@ class _MainAdminState extends State<MainAdmin>
                           builder: (context) => const Admin_Stock());
                     case 'dashboard':
                       return MaterialPageRoute(
-                          builder: (context) => const Admin_Dashboard());
+                          builder: (context) =>  Admin_Dashboard());
                     case 'checkbill':
                       return MaterialPageRoute(
                           builder: (context) => const Admin_checkbill());
