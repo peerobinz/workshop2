@@ -262,7 +262,7 @@ class _Admin_DashboardState extends State<Admin_Dashboard> {
                   ),
                   // เส้นแบ่ง
                   const VerticalDivider(
-                      color: Colors.grey, width: 1.0, thickness: 1.0),
+                      color: AppColors.secondaryColor, width: 1.0, thickness: 2.0),
 
                   // ส่วนล่างขวา (กราฟ)
                   Expanded(
