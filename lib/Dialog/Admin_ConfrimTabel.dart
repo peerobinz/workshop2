@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qr/qr.dart';
 
-class ConfrimTabel extends StatelessWidget {
+class ConfirmTable extends StatelessWidget {
   final int index;
   final Function(int, bool) onUpdateStatus;
 
-  ConfrimTabel({
+  ConfirmTable({
     required this.index,
     required this.onUpdateStatus,
   });
@@ -12,9 +14,9 @@ class ConfrimTabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(15), // ระบุระยะขอบโค้งที่ต้องการ
-  ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15), // ระบุระยะขอบโค้งที่ต้องการ
+      ),
       title: Column(
         children: [
           Image.asset(
@@ -28,7 +30,6 @@ class ConfrimTabel extends StatelessWidget {
           Text(
             'โต๊ะ ${index + 1}',
             style: const TextStyle(
-              // คุณสามารถปรับเปลี่ยน style ในส่วนนี้เพื่อตรงกับต้องการ
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
             ),
@@ -48,7 +49,6 @@ class ConfrimTabel extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor:
                     MaterialStateProperty.all(const Color(0xFFBBBBBB)),
-                // แก้ textStyle เป็น style ของคุณเองหรือลบออก
                 textStyle: MaterialStateProperty.all(const TextStyle(
                     fontSize: 16.0, fontWeight: FontWeight.bold)),
                 fixedSize: MaterialStateProperty.all(const Size(130, 40)),
@@ -59,12 +59,44 @@ class ConfrimTabel extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 onUpdateStatus(index, true);
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // ปิด dialog ปัจจุบัน
+
+                // สร้าง QrCode จากข้อมูล
+                final qrData = "ช่องทางไปยังการสั่งอาหารโต๊ะ${index + 1}";
+                final qrCode = QrCode.fromData(
+                    data: qrData, errorCorrectLevel: QrErrorCorrectLevel.L);
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            // ใช้ Expanded หรือ Flexible ถ้าจำเป็น
+                            Flexible(
+                              child: SizedBox(
+                                width: 200.0,
+                                height: 200.0,
+                                child: QrImageView(
+                                  data: "ช่องทางไปยังการสั่งอาหารโต๊ะ${index + 1}",
+                                  version: QrVersions.auto,
+                                  size: 200.0,
+                                ),
+                              ),
+                            ),
+                            Text(
+                                "Scan this QR Code to open table ${index + 1}"),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
               style: ButtonStyle(
                 backgroundColor:
                     MaterialStateProperty.all(const Color(0xFF0E4E89)),
-                // แก้ textStyle เป็น style ของคุณเองหรือลบออก
                 textStyle: MaterialStateProperty.all(const TextStyle(
                     fontSize: 16.0, fontWeight: FontWeight.bold)),
                 fixedSize: MaterialStateProperty.all(const Size(130, 40)),

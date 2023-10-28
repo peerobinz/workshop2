@@ -90,7 +90,7 @@ class _Admin_TableState extends State<Admin_Table> {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => ConfrimTabel(
+                  builder: (context) => ConfirmTable(
                     index: index,
                     onUpdateStatus: updateTableStatus,
                   ),

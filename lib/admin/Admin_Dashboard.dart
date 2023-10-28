@@ -13,7 +13,6 @@ class _Admin_DashboardState extends State<Admin_Dashboard> {
     ChartData('พ.ย.', 20146),
     ChartData('ธ.ค.', 27146),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,9 +125,7 @@ class _Admin_DashboardState extends State<Admin_Dashboard> {
                 ],
               ),
             ),
-
             ////////////////////////////////////////////////////////////////////
-
             // ส่วนล่าง
             Expanded(
               child: Row(
@@ -262,8 +259,9 @@ class _Admin_DashboardState extends State<Admin_Dashboard> {
                   ),
                   // เส้นแบ่ง
                   const VerticalDivider(
-                      color: AppColors.secondaryColor, width: 1.0, thickness: 2.0),
-
+                      color: AppColors.secondaryColor,
+                      width: 1.0,
+                      thickness: 2.0),
                   // ส่วนล่างขวา (กราฟ)
                   Expanded(
                     child: Column(
@@ -318,7 +316,6 @@ class _Admin_DashboardState extends State<Admin_Dashboard> {
 class ChartData {
   final String month;
   final double sales;
-
   ChartData(this.month, this.sales);
 }
 

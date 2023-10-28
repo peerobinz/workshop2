@@ -50,6 +50,9 @@ class _OrderDetailState extends State<OrderDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+         automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 4, 82, 200),size: 50,),
           onPressed: () {
@@ -58,7 +61,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 .push(MaterialPageRoute(builder: (context) => UserOrder()));
           },
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+       
       ),
         
        

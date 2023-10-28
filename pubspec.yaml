@@ -36,6 +36,7 @@ dependencies:
   data_table_2: ^2.5.8
   image_picker: ^1.0.4
   syncfusion_flutter_charts: ^22.1.39
+  qr_flutter: ^4.1.0
   
   
 

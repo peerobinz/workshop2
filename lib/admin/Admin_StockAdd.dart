@@ -120,12 +120,12 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('สินค้า  ',
+                const Text('หมวดหมู่',
                     style: TextStyle(
                         color: AppColors.secondaryColor, fontSize: 20)),
                 const SizedBox(width: 10),
                 Container(
-                  width: 330,
+                  width: 310,
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -136,6 +136,10 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                       value: selectedProduct,
                       isExpanded: true,
                       items: const [
+                         DropdownMenuItem<String>(
+                          value: '3',
+                          child: Text('003'),
+                        ),
                         DropdownMenuItem<String>(
                           value: '1',
                           child: Text('002'),
@@ -145,7 +149,7 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                           child: Text('001'),
                         ),
                       ],
-                      hint: const Text('สินค้า'),
+                      hint: const Text('หมวดหมู่'),
                       onChanged: (value) {
                         setState(() {
                           selectedProduct = value;
