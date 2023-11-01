@@ -1,6 +1,7 @@
-//import screen
 import 'package:flutter/material.dart';
-import 'package:workshop2test/Dialog/confirmOder_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // For using json.encode/json.decode
+
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/User_OrderSC.dart';
@@ -8,6 +9,7 @@ import 'package:workshop2test/screen/User_StatusSC.dart';
 
 class OrderConfirm extends StatefulWidget {
   final List<Meal> selectedMeals;
+
   const OrderConfirm({Key? key, required this.selectedMeals}) : super(key: key);
 
   @override
@@ -15,6 +17,34 @@ class OrderConfirm extends StatefulWidget {
 }
 
 class _OrderConfirmState extends State<OrderConfirm> {
+  Future<bool> placeOrder(List<Meal> selectedMeals) async {
+    Uri url = Uri.parse('http://127.0.0.1:5000/OderConfirm/PlaceOrder');
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'table_id': 'Your_Table_ID',
+          'items': selectedMeals.map((meal) => {
+                'menu_item_id': meal.id,
+                'quantity': meal.quantity,
+                // Add other fields as needed
+              }).toList(),
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+      print('Failed to place order. Status Code: ${response.statusCode}');
+      return false;
+    } catch (e) {
+      print('Error placing order: $e');
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +142,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   ),
                 ],
               ),
-              Positioned(
+            Positioned(
                 bottom: 50,
                 left: 60,
                 right: 60,
@@ -120,16 +150,8 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      bool result = await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ConfirmationDialog(
-                              selectedMeals: widget.selectedMeals);
-                        },
-                      );
-
-                      if (result == true) {
-                        
+                      bool result = await placeOrder(widget.selectedMeals);
+                      if (result) {
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
@@ -139,16 +161,33 @@ class _OrderConfirmState extends State<OrderConfirm> {
                             ),
                           ),
                         );
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Error'),
+                              content: const Text('Failed to place the order. Please try again.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(350, 60),
-                      backgroundColor:
-                          AppColors.primaryColor, // สีพื้นหลังของปุ่ม
-                      elevation: 4, // ความสูงของเงา
+                      backgroundColor: AppColors.primaryColor,
+                      elevation: 4,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            15), // ปรับความโค้งของมุมที่นี่
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                     child: const Text(

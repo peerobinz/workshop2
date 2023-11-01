@@ -36,8 +36,9 @@ class _UserOrderState extends State<UserOrder> {
           name: meal.name,
           category: meal.category,
           imageUrl: meal.imageUrl,
-          instructions: meal.instructions,
           quantity: 1,
+          price: meal.price,
+          description: meal.description,
         );
         selectedMeals[meal.id] = newMeal;
       }
@@ -57,27 +58,37 @@ class _UserOrderState extends State<UserOrder> {
   }
 
   Future<void> _fetchMeals() async {
-    final response = await http.get(Uri.parse(
-        'https://www.themealdb.com/api/json/v1/1/filter.php?c=Chicken'));
+    try {
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:5000/Orers/menus'), // URL ของ API ใหม่
+      );
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final mealsData = List<Map<String, dynamic>>.from(data['meals']);
-      final fetchedMeals = mealsData
-          .map((mealData) => Meal(
-                id: mealData['idMeal'] ?? '',
-                name: mealData['strMeal'] ?? 'ไม่มีชื่อ',
-                category: mealData['strCategory'] ?? 'ไม่มีหมวดหมู่',
-                imageUrl: mealData['strMealThumb'] ?? 'url รูปไม่พร้อมใช้งาน',
-                instructions: '',
-              ))
-          .toList();
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final mealsData = List<Map<String, dynamic>>.from(data);
+        final fetchedMeals = mealsData
+            .map((mealData) => Meal(
+                  id: mealData['item_id'].toString(),
+                  name: mealData['item_name'],
+                  imageUrl: mealData['item_picture_url'] ??
+                      'https://example.com/default_image.jpg',
+                  description: mealData['item_description'] ?? '',
+                  price: double.parse(
+                      mealData['item_price'].toString()), // แปลงราคาเป็น double
 
-      setState(() {
-        meals = fetchedMeals;
-      });
-    } else {
-      throw Exception('Failed to load meals');
+                  category: mealData['category_id'] ?? '',
+                ))
+            .toList();
+
+        setState(() {
+          meals = fetchedMeals;
+        });
+      } else {
+        throw Exception('Failed to load meals');
+      }
+    } catch (e) {
+      // จัดการ Exception หรือ Error ต่าง ๆ
+      print(e.toString());
     }
   }
 
