@@ -18,49 +18,63 @@ class _Admin_TableState extends State<Admin_Table> {
   void initState() {
     super.initState();
     fetchTables();
+     fetchTableStatus(); // โหลดข้อมูลสถานะโต๊ะ
   }
 
-Future fetchTables() async {
-  var url = Uri.parse('http://127.0.0.1:5000/table');
+  Future fetchTables() async {
+    var url = Uri.parse('http://127.0.0.1:5000/table');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body) as List;
+      setState(() {
+        tableStatus =
+            data.map((table) => table['is_occupied'] == 'ไม่ว่าง').toList();
+        tableCount = tableStatus.length;
+      });
+    } else {
+      // อาจแสดงข้อความเตือนหรือ log เพื่อการ debug
+      throw Exception('Failed to load tables');
+    }
+  }
+
+  Future addTable() async {
+    var url = Uri.parse('http://127.0.0.1:5000/table/addtable');
+    var response = await http.post(url);
+
+    if (response.statusCode == 201) {
+      await fetchTables(); // ตรวจสอบว่ามีการเรียก await ที่นี่
+    } else {
+      // อาจแสดงข้อความเตือนหรือ log เพื่อการ debug
+      throw Exception('Failed to add table');
+    }
+  }
+
+  Future deleteTable(int tableNumber) async {
+    var url = Uri.parse('http://127.0.0.1:5000/table/deletetable');
+    var response = await http.delete(url, body: {'id': tableNumber.toString()});
+
+    if (response.statusCode == 200) {
+      fetchTables(); // Reload table status
+    } else {
+      throw Exception('Failed to delete table');
+    }
+  }
+
+Future fetchTableStatus() async {
+  var url = Uri.parse('http://127.0.0.1:5000/table/table_status');
   var response = await http.get(url);
 
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body) as List;
     setState(() {
-      tableStatus = data.map((table) => table['is_occupied'] == 'ไม่ว่าง').toList();
-      tableCount = tableStatus.length;
+      // อัปเดต tableStatus ให้ตรงกับข้อมูลที่ได้รับจาก API
+      tableStatus = data.map((table) => table['status_table'] == 'ไม่ว่าง').toList();
     });
   } else {
-    // อาจแสดงข้อความเตือนหรือ log เพื่อการ debug
-    throw Exception('Failed to load tables');
+    throw Exception('Failed to load table status');
   }
 }
-
-
-  Future addTable() async {
-  var url = Uri.parse('http://127.0.0.1:5000/table/addtable');
-  var response = await http.post(url);
-
-  if (response.statusCode == 201) {
-    await fetchTables(); // ตรวจสอบว่ามีการเรียก await ที่นี่
-  } else {
-    // อาจแสดงข้อความเตือนหรือ log เพื่อการ debug
-    throw Exception('Failed to add table');
-  }
-}
-
-
-Future deleteTable(int tableNumber) async {
-  var url = Uri.parse('http://127.0.0.1:5000/table/deletetable');
-  var response = await http.delete(url, body: {'id': tableNumber.toString()});
-
-  if (response.statusCode == 200) {
-    fetchTables(); // Reload table status
-  } else {
-    throw Exception('Failed to delete table');
-  }
-}
-
 
 
 
@@ -145,8 +159,8 @@ Future deleteTable(int tableNumber) async {
               child: Container(
                 decoration: BoxDecoration(
                   color: tableStatus[index]
-                      ? AppColors.tabelOn  //สีไม่ว่าง
-                      : AppColors.tabelOff, //สีว่าง
+                      ? AppColors.tabelOn // สีเมื่อโต๊ะไม่ว่าง
+                      : AppColors.tabelOff, // สีเมื่อโต๊ะว่าง
                   borderRadius: BorderRadius.circular(5.0),
                   boxShadow: [
                     BoxShadow(
