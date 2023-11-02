@@ -13,6 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Workshop2',
-        home: MainMenu()); // ลบ const ออก
+        home: MainMenu());
   }
 }
