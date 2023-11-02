@@ -73,8 +73,8 @@ class _UserOrderState extends State<UserOrder> {
                   imageUrl: mealData['item_picture_url'] ??
                       'https://example.com/default_image.jpg',
                   description: mealData['item_description'] ?? '',
-                  price: double.parse(
-                      mealData['item_price'].toString()), // แปลงราคาเป็น double
+                  price: 
+                      mealData['item_price'], 
 
                   category: mealData['category_id'] ?? '',
                 ))

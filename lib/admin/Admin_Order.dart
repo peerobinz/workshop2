@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
 class Admin_Order extends StatefulWidget {
   const Admin_Order({Key? key}) : super(key: key);
 
@@ -19,76 +20,90 @@ class _Admin_OrderState extends State<Admin_Order> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          // สำหรับ DropdownButton "โต๊ะ"
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: DropdownButton<String>(
-                value: selectedDropdownValue1,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedDropdownValue1 = newValue!;
-                  });
-                },
-                items: <String>['โต๊ะ 1', 'ปุ่ม 2', 'ปุ่ม 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: TextStyle(color: AppColors.buttonEdit),
-                    ),
-                  );
-                }).toList(),
+              padding: const EdgeInsets.symmetric(horizontal: 26.0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0, vertical: 4.0), // เพิ่ม padding หากจำเป็น
+                child: DropdownButton<String>(
+                  icon: const Icon(Icons.arrow_drop_down,
+                      color: AppColors.buttonEdit),
+                  style: const TextStyle(
+                      color:
+                          AppColors.buttonEdit), // สีข้อความของ DropdownButton
+                  dropdownColor:
+                      Colors.white, // สีพื้นหลังของตัวเลือกใน DropdownMenu
+                  value: selectedDropdownValue1,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedDropdownValue1 = newValue!;
+                    });
+                  },
+                  items: <String>['โต๊ะ 1', 'ปุ่ม 2', 'ปุ่ม 3']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Row(
+                        children: <Widget>[
+                          Image.asset('assets/icons8-table-60.png',
+                              width: 24,
+                              height: 24,
+                              color: AppColors
+                                  .buttonEdit), // สีไอคอนใน DropdownMenuItem
+                          const SizedBox(width: 8), // ระยะห่าง
+                          Text(
+                            value,
+                            style: const TextStyle(
+                              color: AppColors.buttonEdit,
+                            ), // สีข้อความใน DropdownMenuItem
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ),
-          Spacer(),
+
+          const Spacer(),
           Row(
-            // Add a Row widget
             children: [
+              // สำหรับปุ่ม "คิวอาร์โค้ด"
               ElevatedButton(
-                // Button on the left
-                onPressed: () {
-              
-                // สร้าง QrCode จากข้อมูล
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            // ใช้ Expanded หรือ Flexible ถ้าจำเป็น
-                            Expanded(
-                              child: SizedBox(
-                                width: 200.0,
-                                height: 200.0,
-                                child: QrImageView(
-                                  data: "ช่องทางไปยังการสั่งอาหารโต๊ะ",
-                                  version: QrVersions.auto,
-                                  size: 200.0,
-                                ),
-                              ),
-                            ),
-                            const Text(
-                                " Scan QR Code"),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-                },
-                child: Text(
-                  'คิวอาร์โค้ด',
-                  style: TextStyle(
-                    color: AppColors.tabelGreen,
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: AppColors.tabelGreen,
+                  backgroundColor: AppColors.tabelGreen,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
+                onPressed: () {
+                  // โค้ดของคุณ...
+                },
+                child: const Row(
+                  mainAxisSize:
+                      MainAxisSize.min, // ทำให้ Row มีขนาดพอดีกับเนื้อหา
+                  children: <Widget>[
+                    Text(
+                      'คิวอาร์โค้ด',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: 8), // ระยะห่างระหว่างข้อความกับไอคอน
+                    Icon(Icons.print, color: Colors.white),
+                  ],
+                ),
               ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: DropdownButton<String>(
+                  icon: const Icon(Icons.arrow_drop_down,
+                      color: AppColors.tabelGreen),
                   value: selectedDropdownValue2,
                   onChanged: (String? newValue) {
                     setState(() {
@@ -101,7 +116,7 @@ class _Admin_OrderState extends State<Admin_Order> {
                       value: value,
                       child: Text(
                         value,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.tabelGreen,
                         ),
                       ),
@@ -115,20 +130,26 @@ class _Admin_OrderState extends State<Admin_Order> {
       ),
       body: Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment
+              .start, // จัดให้เนื้อหาใน Column เริ่มจากด้านซ้าย
           children: [
-            Text(
-              'ครั้งที่ 1',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
+            const Padding(
+              padding: EdgeInsets.only(
+                  left: 50.0), // ปรับตามขนาดของคอลัมน์แรกในตาราง
+              child: Text(
+                'ครั้งที่ 1',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
               ),
             ),
             Table(
               border: TableBorder.all(color: AppColors.errorColor),
               columnWidths: {
-                0: FixedColumnWidth(50),
-                1: FixedColumnWidth(530),
-                2: FixedColumnWidth(470),
+                0: const FixedColumnWidth(50),
+                1: const FixedColumnWidth(530),
+                2: const FixedColumnWidth(470),
               },
               children: [
                 TableRow(
@@ -151,7 +172,7 @@ class _Admin_OrderState extends State<Admin_Order> {
                       child: Container(
                         alignment: Alignment.center,
                         color: AppColors.tabelOn,
-                        child: Text(
+                        child: const Text(
                           'รายการ',
                           style: TextStyle(
                             color: Colors.white,
@@ -164,7 +185,7 @@ class _Admin_OrderState extends State<Admin_Order> {
                       child: Container(
                         alignment: Alignment.center,
                         color: AppColors.tabelOn,
-                        child: Text(
+                        child: const Text(
                           'สถานะ',
                           style: TextStyle(
                             color: Colors.white,
@@ -194,7 +215,7 @@ class _Admin_OrderState extends State<Admin_Order> {
                     TableCell(
                         child: Container(
                       alignment: Alignment.center,
-                      child: Text(
+                      child: const Text(
                         'กระเพราไก่',
                         style: TextStyle(
                           color: Colors.black,
@@ -205,7 +226,7 @@ class _Admin_OrderState extends State<Admin_Order> {
                     TableCell(
                       child: Container(
                         alignment: Alignment.center,
-                        child: Text(
+                        child: const Text(
                           'กำลังปรุง',
                           style: TextStyle(
                             color: AppColors.errorColorOrenc,

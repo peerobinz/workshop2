@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -39,7 +41,7 @@ class _OrderDetailState extends State<OrderDetail> {
         name: mealData['item_name'] ?? 'No name',
          imageUrl: mealData['item_picture_url'] ??
                       'https://example.com/default_image.jpg',
-        price: double.parse(mealData['item_price'].toString()),
+        price: mealData['item_price'],
       );
     } else {
       throw Exception('Failed to load meal details');
@@ -228,7 +230,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(350, 60),
+                      minimumSize: Size(350, 60),
                       backgroundColor: AppColors.primaryColor,
                       elevation: 4,
                       shape: RoundedRectangleBorder(
