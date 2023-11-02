@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Meal {
   final String id;
   final String name;
@@ -5,7 +7,7 @@ class Meal {
   final double price; // เพิ่ม field สำหรับราคา
   final String category;
   final String description;
-  int quantity; 
+  int quantity;
   // ตัด field instructions และ category ออกถ้าไม่มีใน API ใหม่
 
   Meal({

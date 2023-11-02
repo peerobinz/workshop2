@@ -60,7 +60,7 @@ class _UserOrderState extends State<UserOrder> {
   Future<void> _fetchMeals() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:5000/Orers/menus'), // URL ของ API ใหม่
+        Uri.parse('http://127.0.0.1:5000/Orders/menus'),
       );
 
       if (response.statusCode == 200) {
@@ -69,14 +69,13 @@ class _UserOrderState extends State<UserOrder> {
         final fetchedMeals = mealsData
             .map((mealData) => Meal(
                   id: mealData['item_id'].toString(),
-                  name: mealData['item_name'],
+                  name: mealData['item_name'].toString(),
                   imageUrl: mealData['item_picture_url'] ??
-                      'https://example.com/default_image.jpg',
-                  description: mealData['item_description'] ?? '',
-                  price: 
-                      mealData['item_price'], 
-
-                  category: mealData['category_id'] ?? '',
+                      'https://yourdomain.com/path/to/default_image.jpg', // ให้ค่าเริ่มต้นถ้า null
+                  description: mealData['item_description'].toString(),
+                  price: double.tryParse(mealData['item_price'].toString()) ??
+                      0.0, // แปลงเป็น double
+                  category: mealData['category_id'].toString(),
                 ))
             .toList();
 
@@ -84,11 +83,12 @@ class _UserOrderState extends State<UserOrder> {
           meals = fetchedMeals;
         });
       } else {
-        throw Exception('Failed to load meals');
+        throw Exception('Failed to load meals: ${response.statusCode}');
       }
     } catch (e) {
       // จัดการ Exception หรือ Error ต่าง ๆ
-      print(e.toString());
+      // แสดงข้อความข้อผิดพลาดให้กับผู้ใช้
+      print('Error: $e');
     }
   }
 
