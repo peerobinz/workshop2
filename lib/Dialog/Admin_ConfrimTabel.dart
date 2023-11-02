@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr/qr.dart';
@@ -10,6 +12,28 @@ class ConfirmTable extends StatelessWidget {
     required this.index,
     required this.onUpdateStatus,
   });
+
+  Future<void> updateTableStatus(int tableId, bool isOccupied) async {
+    final status = isOccupied
+        ? 'ไม่ว่าง'
+        : 'ว่าง'; // ใช้ค่าภาษาไทยที่ตรงกับ TableStatusEnum
+    final response = await http.put(
+      Uri.parse('http://127.0.0.1:5000/table/update_status_table/$tableId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'is_occupied': status, // ตรงกับ key ที่ backend รับ
+      }),
+    );
+    if (response.statusCode == 200) {
+      // Handle success
+      print('Status updated to $status');
+    } else {
+      // Handle error
+      print('Failed to update status: ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +66,10 @@ class ConfirmTable extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ElevatedButton(
-              onPressed: () {
-                onUpdateStatus(index, false);
+              onPressed: () async {
+                await updateTableStatus(index + 1,
+                    false); // เรียกใช้ API เพื่ออัปเดตสถานะเป็น 'ว่าง'
+                onUpdateStatus(index, false); // อัปเดตสถานะใน UI
                 Navigator.of(context).pop();
               },
               style: ButtonStyle(
@@ -57,15 +83,18 @@ class ConfirmTable extends StatelessWidget {
             ),
             const SizedBox(width: 20),
             ElevatedButton(
-              onPressed: () {
-                onUpdateStatus(index, true);
+              onPressed: () async {
+                await updateTableStatus(index + 1,
+                    true); // เรียกใช้ API เพื่ออัปเดตสถานะเป็น 'ไม่ว่าง'
+                onUpdateStatus(index, true); // อัปเดตสถานะใน UI
                 Navigator.of(context).pop(); // ปิด dialog ปัจจุบัน
 
                 // สร้าง QrCode จากข้อมูล
-                final qrData = "ช่องทางไปยังการสั่งอาหารโต๊ะ${index + 1}";
+                final qrData = "qr_code ""${index + 1}";
                 final qrCode = QrCode.fromData(
                     data: qrData, errorCorrectLevel: QrErrorCorrectLevel.L);
 
+                // ignore: use_build_context_synchronously
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -79,7 +108,8 @@ class ConfirmTable extends StatelessWidget {
                                 width: 200.0,
                                 height: 200.0,
                                 child: QrImageView(
-                                  data: "ช่องทางไปยังการสั่งอาหารโต๊ะ${index + 1}",
+                                  data:
+                                      "",
                                   version: QrVersions.auto,
                                   size: 200.0,
                                 ),

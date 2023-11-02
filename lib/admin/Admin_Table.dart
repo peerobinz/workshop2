@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/Admin_ConfrimTabel.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Admin_Table extends StatefulWidget {
   const Admin_Table({Key? key}) : super(key: key);
@@ -12,6 +14,57 @@ class _Admin_TableState extends State<Admin_Table> {
   int tableCount = 9;
   List<bool> tableStatus = List.generate(9, (index) => false);
 
+  @override
+  void initState() {
+    super.initState();
+    fetchTables();
+  }
+
+Future fetchTables() async {
+  var url = Uri.parse('http://127.0.0.1:5000/table');
+  var response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    var data = jsonDecode(response.body) as List;
+    setState(() {
+      tableStatus = data.map((table) => table['is_occupied'] == 'ไม่ว่าง').toList();
+      tableCount = tableStatus.length;
+    });
+  } else {
+    // อาจแสดงข้อความเตือนหรือ log เพื่อการ debug
+    throw Exception('Failed to load tables');
+  }
+}
+
+
+  Future addTable() async {
+  var url = Uri.parse('http://127.0.0.1:5000/table/addtable');
+  var response = await http.post(url);
+
+  if (response.statusCode == 201) {
+    await fetchTables(); // ตรวจสอบว่ามีการเรียก await ที่นี่
+  } else {
+    // อาจแสดงข้อความเตือนหรือ log เพื่อการ debug
+    throw Exception('Failed to add table');
+  }
+}
+
+
+Future deleteTable(int tableNumber) async {
+  var url = Uri.parse('http://127.0.0.1:5000/table/deletetable');
+  var response = await http.delete(url, body: {'id': tableNumber.toString()});
+
+  if (response.statusCode == 200) {
+    fetchTables(); // Reload table status
+  } else {
+    throw Exception('Failed to delete table');
+  }
+}
+
+
+
+
+
   void updateTableStatus(int index, bool isOccupied) {
     setState(() {
       tableStatus[index] = isOccupied;
@@ -23,29 +76,26 @@ class _Admin_TableState extends State<Admin_Table> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0, // ลบเงาของ AppBar
+        elevation: 0,
         actions: [
           OutlinedButton(
             style: OutlinedButton.styleFrom(
               side: const BorderSide(
-                color: AppColors.tabelGreen, // กำหนดสีของกรอบ
-                width: 1, // ความหนาของกรอบ
+                color: AppColors.tabelGreen,
+                width: 1,
               ),
               fixedSize: const Size(100, 10),
             ),
             child: const Text(
               "-- โต๊ะ",
-              style:
-                  TextStyle(color: AppColors.tabelGreen), // กำหนดสีของข้อความ
+              style: TextStyle(color: AppColors.tabelGreen),
             ),
-            onPressed: () {
+            onPressed: () async {
               if (tableCount > 0) {
-                setState(() {
-                  tableCount--;
-                  tableStatus.removeLast();
-                });
+                // ถ้า ID โต๊ะใน backend เริ่มจาก 1, เราต้องลบ 1 ออกจาก tableCount ที่ส่งไป
+                await deleteTable(tableCount - 1);
               } else {
-                // หากไม่มีโต๊ะที่จะลบ, คุณสามารถแสดงข้อความแจ้งเตือนหรือทำการอื่น ๆ
+                // แสดงข้อความแจ้งเตือนหรือทำการอื่น ๆ
               }
             },
           )
@@ -56,30 +106,26 @@ class _Admin_TableState extends State<Admin_Table> {
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 1.5,//ปรับขนาดโต๊ะ
+            childAspectRatio: 1.5,
             crossAxisSpacing: 50.0,
             mainAxisSpacing: 50.0,
           ),
           itemBuilder: (BuildContext context, int index) {
             if (index == tableCount) {
               return Container(
-                width: 30, // กำหนดความกว้าง
-                height: 70, // กำหนดความสูง
+                width: 30,
+                height: 70,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.0), // เพิ่มความโค้ง
+                  borderRadius: BorderRadius.circular(25.0),
                   border: Border.all(color: AppColors.errorColor, width: 2),
                 ),
                 child: Align(
-                  alignment:
-                      Alignment.center, // กำหนดตำแหน่งให้อยู่ตรงกลาง Container
+                  alignment: Alignment.center,
                   child: IconButton(
                     icon: const Icon(Icons.add,
                         size: 50.0, color: AppColors.errorColor),
-                    onPressed: () {
-                      setState(() {
-                        tableCount++;
-                        tableStatus.add(false);
-                      });
+                    onPressed: () async {
+                      await addTable();
                     },
                   ),
                 ),
@@ -97,11 +143,10 @@ class _Admin_TableState extends State<Admin_Table> {
                 );
               },
               child: Container(
-                
                 decoration: BoxDecoration(
                   color: tableStatus[index]
-                      ? AppColors.tabelOn
-                      : AppColors.tabelOff,
+                      ? AppColors.tabelOn  //สีไม่ว่าง
+                      : AppColors.tabelOff, //สีว่าง
                   borderRadius: BorderRadius.circular(5.0),
                   boxShadow: [
                     BoxShadow(
