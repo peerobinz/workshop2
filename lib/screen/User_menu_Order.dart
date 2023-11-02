@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:workshop2test/screen/Order_ConfirmSC.dart';
 
 class User_menu_Order extends StatefulWidget {
-  late final List<dynamic> selectedMenuItems;
   @override
   _User_menu_OrderState createState() => _User_menu_OrderState();
 }
@@ -13,6 +12,7 @@ class User_menu_Order extends StatefulWidget {
 class _User_menu_OrderState extends State<User_menu_Order> {
   late Future<List<dynamic>> menuItems;
   late Future<List<String>> imageUrls;
+
   TextEditingController _searchController = TextEditingController();
   List<dynamic> selectedMenuItems = []; // List to keep track of selected items
 
@@ -62,7 +62,9 @@ class _User_menu_OrderState extends State<User_menu_Order> {
             color: AppColors.secondaryColor,
             size: 35,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         backgroundColor: Colors.white,
         title: Text('เมนู',

@@ -43,7 +43,7 @@ class WaitForPaymentPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainMenu()),
+                  MaterialPageRoute(builder: (context) => MainMenu()),
                 );
               },
             ),
