@@ -3,6 +3,8 @@ import 'package:workshop2test/Dialog/Admin_ConfrimDelete.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/admin/Admin_StockAdd.dart';
 import 'package:workshop2test/admin/Admin_StockEdit.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Admin_Stock extends StatefulWidget {
   const Admin_Stock({super.key});
@@ -12,10 +14,78 @@ class Admin_Stock extends StatefulWidget {
 }
 
 class _Admin_StockState extends State<Admin_Stock> {
-  List<Map<String, dynamic>> items = [
-    {'name': 'สินค้า A', 'price': '100', 'status': 'มี'},
-    {'name': 'สินค้า B', 'price': '200', 'status': 'หมด'},
-  ];
+  List<Map<String, dynamic>> allItems = [];
+  List<Map<String, dynamic>> items = [];
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMenuItems();
+  }
+
+  fetchMenuItems() async {
+    var url = 'http://127.0.0.1:5000/adminstock/orderitemStock';
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body) as List;
+      setState(() {
+        allItems = jsonResponse
+            .map((item) => {
+                  'itemId':
+                      item['item_id'], // สมมติว่าชื่อฟิลด์ใน JSON คือ 'item_id'
+                  'name': item['item_name'],
+                  'price': item['item_price'].toString(),
+                  'status': item['menu_status']
+                })
+            .toList();
+        items = allItems;
+      });
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future<void> deleteMenuItem(String itemName) async {
+    var url = 'http://127.0.0.1:5000/adminstock/deleteitem/$itemName';
+    var response = await http.delete(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // การลบสำเร็จ
+      print('Item deleted successfully');
+    } else {
+      // การลบไม่สำเร็จ
+      print('Failed to delete item: ${response.statusCode}');
+    }
+  }
+
+  Future<void> updateMenuItemStatus(int itemId, String newStatus) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:5000/adminstock/menuitem/update_status/$itemId');
+    var response = await http.put(
+      url,
+      headers: {"Content-Type": "application/json"},
+     body: json.encode({'menu_status': newStatus}), // แก้ไข key ให้ตรงกับ API
+
+    );
+
+    if (response.statusCode == 200) {
+      print('Status updated successfully');
+    } else {
+      print('Response body: ${response.body}'); // แสดงข้อความตอบกลับเพื่อช่วยในการแก้ไขปัญหา
+
+    }
+  }
+
+  void searchItems(String query) {
+    final suggestions = allItems.where((item) {
+      final itemName = item['name'].toLowerCase();
+      final input = query.toLowerCase();
+
+      return itemName.contains(input);
+    }).toList();
+
+    setState(() => items = suggestions);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +96,15 @@ class _Admin_StockState extends State<Admin_Stock> {
         elevation: 0,
         title: Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Align(
-                alignment: Alignment.bottomCenter, // ทำให้ชิดกับขอบล่าง
+                alignment: Alignment.bottomCenter,
                 child: SizedBox(
                   width: 900,
-                  height: 40, // ปรับขนาดตามที่ต้องการ
+                  height: 40,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: searchController,
+                    decoration: const InputDecoration(
                       hintText: 'ค้นหารายการสินค้า...',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
@@ -45,6 +116,7 @@ class _Admin_StockState extends State<Admin_Stock> {
                         size: 30,
                       ),
                     ),
+                    onChanged: searchItems,
                   ),
                 ),
               ),
@@ -159,10 +231,15 @@ class _Admin_StockState extends State<Admin_Stock> {
                                         style: TextStyle(color: Colors.red)),
                                   ),
                                 ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    item['status'] = value;
-                                  });
+                                onChanged: (value) async {
+                                  if (value != null &&
+                                      value != item['status']) {
+                                    await updateMenuItemStatus(
+                                        item['itemId'], value);
+                                    setState(() {
+                                      item['status'] = value;
+                                    });
+                                  }
                                 },
                                 hint: Text(
                                   item['status'],
@@ -190,8 +267,9 @@ class _Admin_StockState extends State<Admin_Stock> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Admin_StockEdit(),
+                                      builder: (context) => Admin_StockEdit(
+                                          itemId: item[
+                                              'itemId']), // ใช้ค่า 'itemId' จาก item
                                     ),
                                   );
                                 },
@@ -208,13 +286,18 @@ class _Admin_StockState extends State<Admin_Stock> {
                                 icon: const Icon(Icons.delete_outline_outlined),
                                 iconSize: 40,
                                 color: const Color.fromARGB(255, 123, 120, 120),
-                                onPressed: () {
-                                  showDialog(
+                                onPressed: () async {
+                                  bool? result = await showDialog<bool>(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return const Admin_ConfirmDelete();
                                     },
                                   );
+
+                                  if (result == true) {
+                                    await deleteMenuItem(item['name']);
+                                    fetchMenuItems(); // โหลดข้อมูลรายการสินค้าใหม่
+                                  }
                                 },
                               ),
                             ),

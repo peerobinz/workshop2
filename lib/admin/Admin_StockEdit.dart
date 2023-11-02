@@ -1,14 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:workshop2test/Dialog/Admin_CancelEdit.dart';
 import 'package:workshop2test/Dialog/Admin_ConfirmEdit.dart';
 import 'package:workshop2test/Text/my_text.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-
 import 'package:workshop2test/admin/Admin_Stock.dart';
 
 class Admin_StockEdit extends StatefulWidget {
-  const Admin_StockEdit({super.key});
+  final int itemId; // ต้องการ itemId เพื่อโหลดข้อมูล
+
+  const Admin_StockEdit({super.key, required this.itemId});
 
   @override
   State<Admin_StockEdit> createState() => _Admin_StockEditState();
@@ -18,7 +21,24 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
   String? selectedProduct;
   File? _image;
   final picker = ImagePicker();
+  String? itemName;
+  double? itemPrice;
+  String? imageUrl; // เพิ่มตัวแปรสำหรับ URL รูปภา
 
+  @override
+  void initState() {
+    super.initState();
+    fetchMenuItem(widget.itemId).then((data) {
+      if (data != null) {
+        setState(() {
+          itemName = data['item_name'];
+          itemPrice = data['item_price'].toDouble();
+          selectedProduct = data['category_id'].toString();
+          // โหลดรูปภาพถ้ามี
+        });
+      }
+    });
+  }
 
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -30,6 +50,29 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
         print('No image selected.');
       }
     });
+  }
+
+  Future<Map<String, dynamic>?> fetchMenuItem(int itemId) async {
+    var url = Uri.parse('http://127.0.0.1:5000/adminstock/menu/$itemId');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      return null;
+    }
+  }
+
+  Future<bool> updateMenuItem(int itemId, Map<String, dynamic> data) async {
+    var url = Uri.parse('http://127.0.0.1:5000/adminstock/editmenu/$itemId');
+    var response = await http.put(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(data),
+    );
+
+    return response.statusCode == 200;
   }
 
   @override
@@ -71,29 +114,36 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                 height: 300,
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.photo),
-                  image: _image == null
-                      ? null
-                      : DecorationImage(
-                          image: FileImage(_image!),
-                          fit: BoxFit.cover,
-                        ),
+                  image: DecorationImage(
+                    image: _image != null
+                        ? FileImage(_image!)
+                        : (imageUrl != null
+                                ? NetworkImage(imageUrl!)
+                                : const AssetImage('path/to/placeholder.png'))
+                            as ImageProvider<Object>,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                child: _image == null
+                child: _image == null && imageUrl == null
                     ? const Icon(Icons.image, size: 100, color: AppColors.photo)
                     : null,
               ),
             ),
             const SizedBox(height: 20),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('รายการ ',
+                const Text('รายการ ',
                     style: TextStyle(
                         color: AppColors.secondaryColor, fontSize: 20)),
                 SizedBox(
                   width: 330,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: TextEditingController(text: itemName),
+                    onChanged: (value) {
+                      itemName = value;
+                    },
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -101,18 +151,24 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
               ],
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('ราคา\t\t\t\t ',
+                const Text('ราคา\t\t\t\t ',
                     style: TextStyle(
                         color: AppColors.secondaryColor, fontSize: 20)),
                 SizedBox(
                   width: 330,
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller:
+                        TextEditingController(text: itemPrice?.toString()),
+                    onChanged: (value) {
+                      itemPrice = double.tryParse(value);
+                    },
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
+                    keyboardType: TextInputType.number,
                   ),
                 ),
               ],
@@ -137,7 +193,7 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                       value: selectedProduct,
                       isExpanded: true,
                       items: const [
-                         DropdownMenuItem<String>(
+                        DropdownMenuItem<String>(
                           value: '3',
                           child: Text('003'),
                         ),
@@ -170,7 +226,7 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                       onPressed: () async {
+                      onPressed: () async {
                         bool? result = await showDialog<bool>(
                           context: context,
                           builder: (BuildContext context) {
@@ -179,10 +235,9 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                         );
 
                         if (result == false) {
-                          // ทำการนำทางไปยังหน้า Admin_Stock เมื่อกดปุ่ม ยืนยัน
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => Admin_Stock(),
+                              builder: (context) => const Admin_Stock(),
                             ),
                           );
                         }
@@ -207,10 +262,21 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                         );
 
                         if (result == true) {
-                          // ทำการนำทางไปยังหน้า Admin_Stock เมื่อกดปุ่ม ยืนยัน
+                          // อัปเดตข้อมูลสินค้า
+                          if (itemName != null &&
+                              itemPrice != null &&
+                              selectedProduct != null) {
+                            await updateMenuItem(widget.itemId, {
+                              'item_name': itemName,
+                              'item_price': itemPrice,
+                              'category_id': int.parse(selectedProduct!),
+                              // ส่งข้อมูลรูปภาพถ้ามี
+                            });
+                          }
+
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => Admin_Stock(),
+                              builder: (context) => const Admin_Stock(),
                             ),
                           );
                         }

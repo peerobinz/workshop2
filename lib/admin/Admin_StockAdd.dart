@@ -4,7 +4,8 @@ import 'package:workshop2test/Dialog/Admin_ConfirmAdd.dart';
 import 'package:workshop2test/Text/my_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:workshop2test/admin/Admin_Stock.dart';
 
 class Admin_StockAdd extends StatefulWidget {
@@ -18,6 +19,8 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
   String? selectedProduct;
   File? _image;
   final picker = ImagePicker();
+  final itemNameController = TextEditingController();
+  final itemPriceController = TextEditingController();
 
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -29,6 +32,27 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
         print('No image selected.');
       }
     });
+  }
+
+  Future<void> addItem() async {
+    var url = Uri.parse('http://127.0.0.1:5000/adminstock/addstock');
+    var response = await http.post(url, body: json.encode({
+      'item_name': itemNameController.text,
+      'item_description': 'รายละเอียดสินค้า', // คุณอาจจะมีตัวแปรหรือ TextEditingController สำหรับสิ่งนี้
+      'item_price': itemPriceController.text,
+      'item_picture_url': _image?.path, // ตรวจสอบว่าการจัดการรูปภาพถูกต้อง
+      'category_id': selectedProduct // ตรวจสอบว่าค่านี้ถูกต้อง
+    }), headers: {
+      'Content-Type': 'application/json'
+    });
+
+    if (response.statusCode == 200) {
+      // การจัดการหลังจากส่งข้อมูลสำเร็จ
+      print('Item added successfully');
+    } else {
+      // การจัดการข้อผิดพลาด
+      print('Failed to add item. Status code: ${response.statusCode}');
+    }
   }
 
   @override
@@ -83,15 +107,16 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
               ),
             ),
             const SizedBox(height: 20),
-            const Row(
+           Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('รายการ ',
+                const Text('รายการ ',
                     style: TextStyle(
                         color: AppColors.secondaryColor, fontSize: 20)),
                 SizedBox(
                   width: 330,
                   child: TextField(
+                    controller: itemNameController, // เชื่อมต่อกับ TextEditingController
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                     ),
@@ -99,16 +124,17 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            const Row(
+            // ... ส่วนของ TextField สำหรับราคาสินค้า
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('ราคา\t\t\t\t ',
+                const Text('ราคา\t\t\t\t ',
                     style: TextStyle(
                         color: AppColors.secondaryColor, fontSize: 20)),
                 SizedBox(
                   width: 330,
                   child: TextField(
+                    controller: itemPriceController, // เชื่อมต่อกับ TextEditingController
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                     ),
@@ -120,7 +146,7 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('หมวดหมู่',
+                const Text('หมวดหมู่', //เลือกหมวดมู่
                     style: TextStyle(
                         color: AppColors.secondaryColor, fontSize: 20)),
                 const SizedBox(width: 10),
@@ -138,15 +164,15 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                       items: const [
                          DropdownMenuItem<String>(
                           value: '3',
-                          child: Text('003'),
+                          child: Text('3'),
                         ),
                         DropdownMenuItem<String>(
                           value: '1',
-                          child: Text('002'),
+                          child: Text('2'),
                         ),
                         DropdownMenuItem<String>(
                           value: '2',
-                          child: Text('001'),
+                          child: Text('1'),
                         ),
                       ],
                       hint: const Text('หมวดหมู่'),
