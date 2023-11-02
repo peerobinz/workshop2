@@ -1,33 +1,20 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-void main() {
-  runApp(MyApp());
-}
+import 'package:workshop2test/screen/Order_ConfirmSC.dart';
 
-class MyApp extends StatelessWidget {
+class User_menu_Order extends StatefulWidget {
+  late final List<dynamic> selectedMenuItems;
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Menu Items',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
+  _User_menu_OrderState createState() => _User_menu_OrderState();
 }
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _User_menu_OrderState extends State<User_menu_Order> {
   late Future<List<dynamic>> menuItems;
   late Future<List<String>> imageUrls;
   TextEditingController _searchController = TextEditingController();
+  List<dynamic> selectedMenuItems = []; // List to keep track of selected items
 
   @override
   void initState() {
@@ -59,6 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void addItemToCart(dynamic menuItem) {
+    setState(() {
+      selectedMenuItems.add(menuItem);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,13 +68,41 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('เมนู',
             style: TextStyle(color: AppColors.secondaryColor, fontSize: 32)),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.shopping_basket,
-              color: AppColors.secondaryColor,
-              size: 35,
-            ),
-            onPressed: () {},
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.shopping_basket,
+                  color: AppColors.secondaryColor,
+                  size: 35,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderConfirm(
+                            selectedMenuItems: selectedMenuItems.toList())),
+                  );
+                },
+              ),
+              if (selectedMenuItems.isNotEmpty)
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: CircleAvatar(
+                    radius: 8.0,
+                    backgroundColor: Colors.red,
+                    child: Text(
+                      selectedMenuItems.length.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -120,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.0),
                       child: Text(
                         'รายการอาหาร',
                         style: TextStyle(
@@ -150,14 +171,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 width: 50, height: 50, fit: BoxFit.cover)
                             : null,
                         title: Text(itemName),
-                        subtitle: Text('Price: $itemPrice'),
+                        subtitle: Text('ราคา : $itemPrice'),
                         trailing: IconButton(
                           icon: Icon(
                             Icons.add_circle_outline,
                             color: AppColors.secondaryColor,
                           ),
                           onPressed: () {
-                            // Add functionality for adding item to cart or list
+                            addItemToCart(item);
                           },
                         ),
                       );
@@ -168,6 +189,55 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+              AppColors.primaryColor,
+            ),
+            fixedSize: MaterialStateProperty.all<Size>(const Size(250, 60)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    OrderConfirm(selectedMenuItems: selectedMenuItems),
+              ),
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '${selectedMenuItems.length}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.secondaryColor,
+                  ),
+                ),
+              ),
+              const Text(
+                '   รายการที่รอส่ง',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

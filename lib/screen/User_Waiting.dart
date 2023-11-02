@@ -14,9 +14,9 @@ class WaitForPaymentPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Icon(
-                  Icons.receipt_long_outlined,  // ไอคอนใบเสร็จ
-                  size: 300,  // ขนาดของไอคอน
-                  color: Color.fromARGB(255, 158, 19, 19),  // สีของไอคอน
+                  Icons.receipt_long_outlined, // ไอคอนใบเสร็จ
+                  size: 300, // ขนาดของไอคอน
+                  color: Color.fromARGB(255, 158, 19, 19), // สีของไอคอน
                 ),
                 SizedBox(height: 20),
                 CircularProgressIndicator(), // แสดงรูปแห่งการโหลด
@@ -32,19 +32,19 @@ class WaitForPaymentPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 40,  // ตำแหน่งจากด้านบน
-            right: 20,  // ตำแหน่งจากด้านขวา
+            top: 40, // ตำแหน่งจากด้านบน
+            right: 20, // ตำแหน่งจากด้านขวา
             child: IconButton(
               icon: const Icon(
-                Icons.close,  // ไอคอน x
-                size: 50,  // ขนาดของไอคอน
-                color: Color.fromARGB(255, 158, 19, 19),  // สีของไอคอน
+                Icons.close, // ไอคอน x
+                size: 50, // ขนาดของไอคอน
+                color: Color.fromARGB(255, 158, 19, 19), // สีของไอคอน
               ),
               onPressed: () {
-                 Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MainMenu()),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainMenu()),
+                );
               },
             ),
           ),

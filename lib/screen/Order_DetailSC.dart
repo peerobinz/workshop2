@@ -1,11 +1,7 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:workshop2test/manu/meal.dart';
-import 'package:workshop2test/screen/User_OrderSC.dart';
+import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class OrderDetail extends StatefulWidget {
   final String mealId;
@@ -17,7 +13,7 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail> {
-  late Future<Meal> mealData;
+  late Future<Map<String, dynamic>> mealData;
   int quantity = 1;
 
   @override
@@ -26,34 +22,33 @@ class _OrderDetailState extends State<OrderDetail> {
     mealData = _fetchMealData();
   }
 
-  Future<Meal> _fetchMealData() async {
-    final response = await http
-        .get(Uri.parse('http://127.0.0.1:5000/OrderDetail/${widget.mealId}'));
+  Future<Map<String, dynamic>> _fetchMealData() async {
+    var response =
+        await http.get(Uri.parse('http://127.0.0.1:5000/Orders/menus'));
+    var imageResponse =
+        await http.get(Uri.parse('http://127.0.0.1:5000/Orders/pic_url'));
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final mealData = Map<String, dynamic>.from(data['meals'][0]);
+    if (response.statusCode == 200 && imageResponse.statusCode == 200) {
+      List<dynamic> menuData = json.decode(response.body);
+      List<String> imageData = json.decode(imageResponse.body).cast<String>();
 
-      return Meal(
-        category: mealData['category_id'].toString(), 
-        description: mealData['item_description'] ?? '',
-        id: mealData['item_id'].toString(),
-        name: mealData['item_name'] ?? 'No name',
-         imageUrl: mealData['item_picture_url'] ??
-                      'https://example.com/default_image.jpg',
-        price: mealData['item_price'],
+      Map<String, dynamic> meal = menuData.firstWhere(
+        (item) => item['item_id'].toString() == widget.mealId,
+        orElse: () => throw Exception('Meal not found'),
       );
+      int imageIndex = menuData.indexOf(meal);
+      String imageUrl = imageData.isNotEmpty
+          ? imageData[imageIndex]
+          : 'https://example.com/default_image.jpg';
+
+      return {
+        'meal': meal,
+        'imageUrl': imageUrl,
+      };
     } else {
       throw Exception('Failed to load meal details');
     }
   }
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +64,12 @@ class _OrderDetailState extends State<OrderDetail> {
             size: 50,
           ),
           onPressed: () {
-            print("Back button pressed");
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => UserOrder()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => User_menu_Order()));
           },
         ),
       ),
-      body: FutureBuilder<Meal>(
+      body: FutureBuilder<Map<String, dynamic>>(
         future: mealData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -92,7 +86,9 @@ class _OrderDetailState extends State<OrderDetail> {
             );
           }
 
-          final meal = snapshot.data!;
+          Map<String, dynamic> mealDetails = snapshot.data!;
+          Map<String, dynamic> meal = mealDetails['meal'];
+          String imageUrl = mealDetails['imageUrl'];
 
           return SingleChildScrollView(
             child: Column(
@@ -111,7 +107,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         20.0), // ปรับขนาดของกรอบที่คุณต้องการ
                     child: ClipOval(
                       child: Image.network(
-                        meal.imageUrl,
+                        imageUrl,
                         width: 100, // กำหนดขนาดที่คุณต้องการ
                         height: 100, // กำหนดขนาดที่คุณต้องการ
                         fit: BoxFit.cover, // ให้รูปภาพเต็มกรอบ
@@ -125,12 +121,12 @@ class _OrderDetailState extends State<OrderDetail> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${meal.name}                           ${meal.price}',
+                        '${meal['item_name']}                           ${meal['item_price']}',
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'หมวดหมู่: ${meal.category} ${meal.description}',
+                        'หมวดหมู่: ${meal['category_id']} ${meal['item_description']}',
                         style: const TextStyle(fontSize: 18),
                       ),
                       const SizedBox(height: 8),
@@ -153,9 +149,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                 BorderSide(color: AppColors.errorColor02),
                           ),
                           hintText: 'กรุณาระบุหมายเหตุ ext. ไม่ผัก',
-                          hintStyle: TextStyle(
-                            fontSize: 20,
-                          ),
+                          hintStyle: TextStyle(fontSize: 20),
                         ),
                       ),
                       const SizedBox(height: 28),
@@ -172,19 +166,14 @@ class _OrderDetailState extends State<OrderDetail> {
                                 });
                               },
                               child: Container(
-                                //สีเเละวงกลม
-                                padding: const EdgeInsets.all(
-                                    4), // ปรับ padding ตามที่คุณต้องการ
+                                padding: const EdgeInsets.all(4),
                                 decoration: const BoxDecoration(
-                                  color: AppColors
-                                      .errorColorOrenc, // ใช้สีที่คุณต้องการ
-                                  shape: BoxShape
-                                      .circle, // ทำให้ Container มีรูปทรงวงกลม
+                                  color: AppColors.errorColorOrenc,
+                                  shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
                                   Icons.remove,
-                                  color: Colors
-                                      .white, // ใช้สีที่คุณต้องการสำหรับ icon
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -199,18 +188,14 @@ class _OrderDetailState extends State<OrderDetail> {
                                 });
                               },
                               child: Container(
-                                //สีเเละวงกลม
-                                padding: const EdgeInsets.all(
-                                    4), // ปรับ padding ตามที่คุณต้องการ
+                                padding: const EdgeInsets.all(4),
                                 decoration: const BoxDecoration(
-                                  color: AppColors
-                                      .errorColorOrenc, // ใช้สีที่คุณต้องการ
-                                  shape: BoxShape
-                                      .circle, // ทำให้ Container มีรูปทรงกลม
+                                  color: AppColors.errorColorOrenc,
+                                  shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
                                   Icons.add,
-                                  color: Colors.white, // สีของไอคอน
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -225,7 +210,7 @@ class _OrderDetailState extends State<OrderDetail> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context, {
-                        'meal': snapshot.data,
+                        'meal': meal,
                         'quantity': quantity,
                       });
                     },

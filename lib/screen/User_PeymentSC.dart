@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/confirmPayment_dialog.dart';
-import 'package:workshop2test/manu/meal.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
-import 'package:intl/intl.dart'; //เวลา
+import 'package:intl/intl.dart'; // For date formatting
 
 class PaymentPage extends StatefulWidget {
-  final List<Meal> selectedMeals;
+  final List<dynamic>
+      selectedMenuItems; // Changed from List<Meal> to List<dynamic>
 
-  const PaymentPage({Key? key, required this.selectedMeals}) : super(key: key);
+  const PaymentPage({Key? key, required this.selectedMenuItems})
+      : super(key: key);
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  double calculateTotal() {
+    double total = 0.0;
+    for (var item in widget.selectedMenuItems) {
+      total +=
+          item['price'] * item['quantity']; // Changed to use dynamic access
+    }
+    return total;
+  }
+
+  double calculateVAT(double total) {
+    return total * 0.07;
+  }
+
+  double calculateGrandTotal(double total, double vat) {
+    return total + vat;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double total = calculateTotal();
+    double vat = calculateVAT(total);
+    double grandTotal = calculateGrandTotal(total, vat);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -48,19 +70,19 @@ class _PaymentPageState extends State<PaymentPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'วันที่: ${DateFormat('dd/MM/').format(DateTime.now().toLocal())}${DateTime.now().year + 543}',
+                      'วันที่: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}',
                       style: const TextStyle(fontSize: 20),
                     ),
                     Text(
-                      'เวลา: ${DateFormat('HH:mm').format(DateTime.now().toLocal())}',
+                      'เวลา: ${DateFormat('HH:mm').format(DateTime.now())}',
                       style: const TextStyle(fontSize: 20),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 const Divider(
-                  color: Colors.black, // กำหนดสีเป็นสีดำ
-                  thickness: 1, // กำหนดความหนาของเส้น
+                  color: Colors.black,
+                  thickness: 1,
                 ),
               ],
             ),
@@ -80,16 +102,15 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   const SizedBox(height: 10),
                   ListView.builder(
-                    shrinkWrap:
-                        true, // ให้ ListView.builder ใช้พื้นที่เท่าที่จำเป็น
-                    physics:
-                        NeverScrollableScrollPhysics(), // ปิดการเลื่อนภายใน ListView.builder
-                    itemCount: widget.selectedMeals.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: widget.selectedMenuItems.length,
                     itemBuilder: (context, index) {
-                      final meal = widget.selectedMeals[index];
+                      final menuItem = widget.selectedMenuItems[index];
                       return ListTile(
-                        title: Text(meal.name),
-                        subtitle: Text(meal.category),
+                        title: Text(menuItem['name']),
+                        subtitle: Text('จำนวน: ${menuItem['quantity']}'),
+                        trailing: Text('ราคา: ${menuItem['price']}'),
                       );
                     },
                   ),
@@ -97,13 +118,16 @@ class _PaymentPageState extends State<PaymentPage> {
                     color: Colors.black,
                     thickness: 1,
                   ),
-                  const Text('รวมทั้งสิน ', style: TextStyle(fontSize: 20)),
+                  Text('รวมทั้งสิน: ${total.toStringAsFixed(2)}',
+                      style: const TextStyle(fontSize: 20)),
                   const SizedBox(height: 5),
-                  const Text('Vat 7 % ', style: TextStyle(fontSize: 20)),
+                  Text('Vat 7%: ${vat.toStringAsFixed(2)}',
+                      style: const TextStyle(fontSize: 20)),
                   const SizedBox(height: 5),
-                  const Text(
-                    'รวมสุทธิ ',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  Text(
+                    'รวมสุทธิ: ${grandTotal.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
                   )
                 ],
               ),
@@ -167,6 +191,3 @@ class AppColors {
   static const Color errorColor = Color(0xFFB00020);
   static const Color errorColor02 = Color(0xFFBBBBBB);
 }
-
-
-
