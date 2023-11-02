@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert'; // For using json.encode/json.decode
+import 'dart:convert';
 
 import 'package:workshop2test/Text/my_text.dart';
-import 'package:workshop2test/manu/meal.dart';
-import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
+import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class OrderConfirm extends StatefulWidget {
-  final List<Meal> selectedMeals;
+  final List<dynamic> selectedMenuItems; // Change to dynamic
 
-  const OrderConfirm({Key? key, required this.selectedMeals}) : super(key: key);
+  const OrderConfirm({Key? key, required this.selectedMenuItems})
+      : super(key: key); // Change the constructor
 
   @override
   State<OrderConfirm> createState() => _OrderConfirmState();
 }
 
 class _OrderConfirmState extends State<OrderConfirm> {
-  Future<bool> placeOrder(List<Meal> selectedMeals) async {
+  Future<bool> placeOrder(List<dynamic> selectedMenuItems) async {
     Uri url = Uri.parse('http://127.0.0.1:5000/OderConfirm/PlaceOrder');
 
     try {
@@ -26,11 +26,14 @@ class _OrderConfirmState extends State<OrderConfirm> {
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'table_id': 'Your_Table_ID',
-          'items': selectedMeals.map((meal) => {
-                'menu_item_id': meal.id,
-                'quantity': meal.quantity,
-                // Add other fields as needed
-              }).toList(),
+          'items': selectedMenuItems
+              .map((menuItem) => {
+                    'menu_item_id':
+                        menuItem['id'], // Adjust field names as necessary
+                    'quantity':
+                        menuItem['quantity'], // Adjust field names as necessary
+                  })
+              .toList(),
         }),
       );
 
@@ -87,15 +90,13 @@ class _OrderConfirmState extends State<OrderConfirm> {
                               .copyWith(color: AppColors.secondaryColor),
                           textAlign: TextAlign.left,
                         ),
-                        const SizedBox(
-                            height:
-                                8), 
+                        const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment
                               .spaceBetween, // Separate the text and the button
                           children: [
                             Text(
-                              'จำนวนรายการ: ${widget.selectedMeals.length}',
+                              'จำนวนรายการ: ${widget.selectedMenuItems.length}',
                               style: MyText.subheading
                                   .copyWith(color: AppColors.secondaryColor),
                             ),
@@ -104,7 +105,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const UserOrder()),
+                                      builder: (context) => User_menu_Order()),
                                 );
                               },
                               child: Container(
@@ -127,22 +128,25 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: widget.selectedMeals.length,
+                      itemCount: widget.selectedMenuItems.length,
                       itemBuilder: (context, index) {
-                        final selectedMeal = widget.selectedMeals[index];
+                        final menuItem = widget.selectedMenuItems[index];
                         return ListTile(
-                          title: Text(selectedMeal.name),//data
-                          subtitle: Text(selectedMeal.category),//data
-                          leading: Image.network(selectedMeal.imageUrl),//data
+                          title: Text(menuItem[
+                              'name']), // Adjust field names as necessary
+                          subtitle: Text(menuItem[
+                              'category']), // Adjust field names as necessary
+                          leading: Image.network(menuItem[
+                              'imageUrl']), // Adjust field names as necessary
                           trailing: Text(
-                              'จำนวน: ${selectedMeal.quantity}'), //data
+                              'จำนวน: ${menuItem['quantity']}'), // Adjust field names as necessary
                         );
                       },
                     ),
                   ),
                 ],
               ),
-            Positioned(
+              Positioned(
                 bottom: 50,
                 left: 60,
                 right: 60,
@@ -150,14 +154,15 @@ class _OrderConfirmState extends State<OrderConfirm> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      bool result = await placeOrder(widget.selectedMeals);
+                      bool result = await placeOrder(widget.selectedMenuItems);
                       if (result) {
                         // ignore: use_build_context_synchronously
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => UserStatus(
-                              selectedMeals: widget.selectedMeals,
+                              selectedMenuItems: widget
+                                  .selectedMenuItems, // Change to selectedMenuItems
                             ),
                           ),
                         );
@@ -168,7 +173,8 @@ class _OrderConfirmState extends State<OrderConfirm> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Error'),
-                              content: const Text('Failed to place the order. Please try again.'),
+                              content: const Text(
+                                  'Failed to place the order. Please try again.'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('Close'),

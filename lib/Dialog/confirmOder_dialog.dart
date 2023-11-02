@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Text/my_text.dart';
-import 'package:workshop2test/manu/meal.dart';
-
 import 'package:workshop2test/screen/User_StatusSC.dart';
 
 class ConfirmationDialog extends StatefulWidget {
-  final List<Meal> selectedMeals;
+  final List<dynamic> selectedMenuItems;
 
-  const ConfirmationDialog({Key? key, required this.selectedMeals})
+  const ConfirmationDialog({Key? key, required this.selectedMenuItems})
       : super(key: key);
 
   @override
@@ -22,7 +20,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserStatus(selectedMeals: widget.selectedMeals),
+          builder: (context) =>
+              UserStatus(selectedMenuItems: widget.selectedMenuItems),
         ),
       );
     });
@@ -49,7 +48,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             ],
           ),
           const SizedBox(height: 10),
-          const Icon(Icons.checklist, size: 57, color: Color.fromARGB(255, 174, 13, 13)),
+          const Icon(Icons.checklist,
+              size: 57, color: Color.fromARGB(255, 174, 13, 13)),
           const SizedBox(height: 20),
           const Text('ทำรายการเสร็จสิ้น', style: MyText.basic),
           const SizedBox(height: 20),

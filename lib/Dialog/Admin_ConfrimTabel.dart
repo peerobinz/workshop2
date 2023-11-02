@@ -79,7 +79,8 @@ class ConfirmTable extends StatelessWidget {
                                 width: 200.0,
                                 height: 200.0,
                                 child: QrImageView(
-                                  data: "ช่องทางไปยังการสั่งอาหารโต๊ะ${index + 1}",
+                                  data:
+                                      "ช่องทางไปยังการสั่งอาหารโต๊ะ${index + 1}",
                                   version: QrVersions.auto,
                                   size: 200.0,
                                 ),

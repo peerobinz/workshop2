@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Dialog/services_dialog.dart';
 import 'package:workshop2test/Text/my_text.dart';
-import 'package:workshop2test/manu/meal.dart';
-import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_PeymentSC.dart';
+import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class UserStatus extends StatefulWidget {
-  final List<Meal> selectedMeals;
+  final List<dynamic> selectedMenuItems;
 
-  const UserStatus({Key? key, required this.selectedMeals}) : super(key: key);
+  const UserStatus({Key? key, required this.selectedMenuItems})
+      : super(key: key);
 
   @override
   State<UserStatus> createState() => _UserStatusState();
@@ -22,9 +22,9 @@ class _UserStatusState extends State<UserStatus> {
         slivers: <Widget>[
           SliverAppBar(
             backgroundColor: Colors.white,
-            expandedHeight: 50.0, // ระบุความสูงของ SliverAppBar
-            floating: false, // กำหนดให้ SliverAppBar ไม่ลอยขึ้นเมื่อเลื่อนลง
-            pinned: true, // กำหนดให้ SliverAppBar คงอยู่ด้านบนเสมอ
+            expandedHeight: 50.0,
+            floating: false,
+            pinned: true,
             flexibleSpace: const FlexibleSpaceBar(
               title: Text(
                 'สถานะ',
@@ -45,8 +45,8 @@ class _UserStatusState extends State<UserStatus> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          PaymentPage(selectedMeals: widget.selectedMeals),
+                      builder: (context) => PaymentPage(
+                          selectedMenuItems: widget.selectedMenuItems),
                     ),
                   );
                 },
@@ -71,26 +71,26 @@ class _UserStatusState extends State<UserStatus> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                final selectedMeal = widget.selectedMeals[index];
+                final menuItem = widget.selectedMenuItems[index];
                 return ListTile(
-                  title: Text(selectedMeal.name),
-                  subtitle: Text(selectedMeal.category),
-                  leading: Image.network(selectedMeal.imageUrl),
+                  title: Text(menuItem['name']),
+                  subtitle: Text(menuItem['category']),
+                  leading: Image.network(menuItem['imageUrl']),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('จำนวน: ${selectedMeal.quantity}'),
+                      Text('จำนวน: ${menuItem['quantity']}'),
                       const Text(
-                        'สถานะ: กำลังปรุง', // เพิ่มส่วนแสดงสถานะที่นี่
+                        'สถานะ: กำลังปรุง',
                         style: TextStyle(
-                          color: Colors.orange, // สีส้มหรือสีที่คุณต้องการ
+                          color: Colors.orange,
                         ),
                       ),
                     ],
                   ),
                 );
               },
-              childCount: widget.selectedMeals.length,
+              childCount: widget.selectedMenuItems.length,
             ),
           ),
         ],
@@ -99,7 +99,7 @@ class _UserStatusState extends State<UserStatus> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const UserOrder()),
+            MaterialPageRoute(builder: (context) => User_menu_Order()),
           );
         },
         style: ElevatedButton.styleFrom(

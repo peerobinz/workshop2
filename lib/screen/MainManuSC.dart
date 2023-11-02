@@ -1,14 +1,9 @@
-//import screen
 import 'package:flutter/material.dart';
 
 import 'package:workshop2test/admin/Tabbar/MainAdmin.dart';
-
-import 'package:workshop2test/screen/User_OrderSC.dart';
 import 'package:workshop2test/screen/User_StatusSC.dart';
+import 'package:workshop2test/screen/User_menu_Order.dart';
 
-//import widget
-
-//import add-on
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
 
@@ -17,6 +12,9 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  // Initialize the selectedMenuItems list
+  final List<dynamic> selectedMenuItems = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +41,7 @@ class _MainMenuState extends State<MainMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const UserOrder()),
+                          builder: (context) => User_menu_Order()),
                     );
                   },
                   style: ButtonStyle(
@@ -54,8 +52,7 @@ class _MainMenuState extends State<MainMenu> {
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            15), // Adjust this value for the desired corner radius
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                   ),
@@ -70,9 +67,8 @@ class _MainMenuState extends State<MainMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const UserStatus(
-                                selectedMeals: [],
-                              )),
+                          builder: (context) =>
+                              UserStatus(selectedMenuItems: selectedMenuItems)),
                     );
                   },
                   style: ButtonStyle(
@@ -82,8 +78,7 @@ class _MainMenuState extends State<MainMenu> {
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            15), // Adjust this value for the desired corner radius
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                   ),
@@ -103,8 +98,7 @@ class _MainMenuState extends State<MainMenu> {
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            15), // Adjust this value for the desired corner radius
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                   ),
@@ -118,8 +112,7 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>  MainAdmin()),
+                      MaterialPageRoute(builder: (context) => MainAdmin()),
                     );
                   },
                   style: ButtonStyle(
@@ -130,8 +123,7 @@ class _MainMenuState extends State<MainMenu> {
                         MaterialStateProperty.all<Size>(const Size(250, 60)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            15), // Adjust this value for the desired corner radius
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                   ),
