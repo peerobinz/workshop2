@@ -5,8 +5,6 @@ import 'package:workshop2test/screen/User_StatusSC.dart';
 import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
-
   @override
   State<MainMenu> createState() => _MainMenuState();
 }
@@ -14,7 +12,6 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
   // Initialize the selectedMenuItems list
   final List<dynamic> selectedMenuItems = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
