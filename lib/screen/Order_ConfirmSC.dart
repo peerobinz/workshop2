@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:workshop2test/Dialog/confirmOder_dialog.dart';
 import 'dart:convert';
 
+import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class OrderConfirm extends StatefulWidget {
@@ -37,7 +39,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
   }
 
   Future<void> submitOrder() async {
-    // ข้อมูลที่จะส่งไปยัง API
     var data = jsonEncode(<String, dynamic>{
       'table_id': '1', // ต้องแทนที่ด้วย ID ของโต๊ะที่เกี่ยวข้อง
       'items': widget.selectedMenuItems.map((menuItem) {
@@ -49,7 +50,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
       }).toList(),
     });
 
-    // ส่งข้อมูลไปยัง API
     var response = await http.post(
       Uri.parse('http://127.0.0.1:5000/order/create-and-add-items'),
       headers: <String, String>{
@@ -58,14 +58,35 @@ class _OrderConfirmState extends State<OrderConfirm> {
       body: data,
     );
 
-    // ตรวจสอบคำตอบจาก API
     if (response.statusCode == 201) {
-      // การสร้าง Order สำเร็จ
       var responseData = jsonDecode(response.body);
       print('New order created with ID: ${responseData['message']}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ConfirmationDialog(
+              selectedMenuItems: widget.selectedMenuItems);
+        },
+      );
     } else {
-      // มีข้อผิดพลาดในการสร้าง Order
       print('Failed to create order: ${response.body}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('ผิดพลาด'),
+            content: Text('ไม่สามารถบันทึกการสั่งซื้อของคุณได้'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('ปิด'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -213,6 +234,38 @@ class _OrderConfirmState extends State<OrderConfirm> {
       ),
     );
   }
+}
+
+@override
+Widget build(BuildContext context) {
+  return Dialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12.0),
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        const Icon(Icons.checklist,
+            size: 57, color: Color.fromARGB(255, 174, 13, 13)),
+        const SizedBox(height: 20),
+        const Text('ทำรายการเสร็จสิ้น', style: MyText.basic),
+        const SizedBox(height: 20),
+        const SizedBox(height: 10),
+      ],
+    ),
+  );
 }
 
 class AppColors {
