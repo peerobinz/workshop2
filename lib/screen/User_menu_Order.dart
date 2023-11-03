@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:workshop2test/screen/MainManuSC.dart';
 import 'dart:convert';
 
 import 'package:workshop2test/screen/Order_ConfirmSC.dart';
 
 class User_menu_Order extends StatefulWidget {
+  final List<dynamic> selectedMenuItems;
+  User_menu_Order({Key? key, required this.selectedMenuItems})
+      : super(key: key);
   @override
   _User_menu_OrderState createState() => _User_menu_OrderState();
 }
@@ -14,13 +18,14 @@ class _User_menu_OrderState extends State<User_menu_Order> {
   late Future<List<String>> imageUrls;
 
   TextEditingController _searchController = TextEditingController();
-  List<dynamic> selectedMenuItems = []; // List to keep track of selected items
-
+  late List<dynamic> selectedMenuItems;
   @override
   void initState() {
     super.initState();
     menuItems = fetchMenuItems();
     imageUrls = fetchImageUrls();
+    selectedMenuItems =
+        widget.selectedMenuItems; // Use the passed selectedMenuItems
   }
 
   Future<List<dynamic>> fetchMenuItems() async {
@@ -48,7 +53,8 @@ class _User_menu_OrderState extends State<User_menu_Order> {
 
   void addItemToCart(dynamic menuItem) {
     setState(() {
-      selectedMenuItems.add(menuItem);
+      widget.selectedMenuItems
+          .add(menuItem); // Use the passed selectedMenuItems
     });
   }
 
@@ -63,7 +69,10 @@ class _User_menu_OrderState extends State<User_menu_Order> {
             size: 35,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MainMenu()),
+            );
           },
         ),
         backgroundColor: Colors.white,
@@ -84,11 +93,12 @@ class _User_menu_OrderState extends State<User_menu_Order> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => OrderConfirm(
-                            selectedMenuItems: selectedMenuItems.toList())),
+                            selectedMenuItems:
+                                widget.selectedMenuItems.toList())),
                   );
                 },
               ),
-              if (selectedMenuItems.isNotEmpty)
+              if (widget.selectedMenuItems.isNotEmpty)
                 Positioned(
                   right: 4,
                   top: 4,
@@ -96,7 +106,7 @@ class _User_menu_OrderState extends State<User_menu_Order> {
                     radius: 8.0,
                     backgroundColor: Colors.red,
                     child: Text(
-                      selectedMenuItems.length.toString(),
+                      widget.selectedMenuItems.length.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12.0,
@@ -211,7 +221,7 @@ class _User_menu_OrderState extends State<User_menu_Order> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    OrderConfirm(selectedMenuItems: selectedMenuItems),
+                    OrderConfirm(selectedMenuItems: widget.selectedMenuItems),
               ),
             );
           },
@@ -225,7 +235,7 @@ class _User_menu_OrderState extends State<User_menu_Order> {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '${selectedMenuItems.length}',
+                  '${widget.selectedMenuItems.length}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -248,7 +258,5 @@ class _User_menu_OrderState extends State<User_menu_Order> {
 class AppColors {
   static const Color primaryColor = Color(0xFF0E4E89);
   static const Color secondaryColor = Color(0xFF026D81);
-  static const Color errorColor = Color(0xFFB00020);
-  static const Color errorColor02 = Color(0xFFBBBBBB);
-  static const Color errorColorOrenc = Color(0xFFED6335);
+  // ... add more colors as needed
 }

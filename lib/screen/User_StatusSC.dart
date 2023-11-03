@@ -5,11 +5,7 @@ import 'package:workshop2test/screen/User_PeymentSC.dart';
 import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class UserStatus extends StatefulWidget {
-  final List<dynamic> selectedMenuItems;
-
-  const UserStatus({Key? key, required this.selectedMenuItems})
-      : super(key: key);
-
+  late final List<dynamic> selectedMenuItems;
   @override
   State<UserStatus> createState() => _UserStatusState();
 }
@@ -99,7 +95,10 @@ class _UserStatusState extends State<UserStatus> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => User_menu_Order()),
+            MaterialPageRoute(
+                builder: (context) => User_menu_Order(
+                      selectedMenuItems: [],
+                    )),
           );
         },
         style: ElevatedButton.styleFrom(
