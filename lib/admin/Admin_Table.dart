@@ -18,7 +18,7 @@ class _Admin_TableState extends State<Admin_Table> {
   void initState() {
     super.initState();
     fetchTables();
-     fetchTableStatus(); // โหลดข้อมูลสถานะโต๊ะ
+    fetchTableStatus(); // โหลดข้อมูลสถานะโต๊ะ
   }
 
   Future fetchTables() async {
@@ -61,23 +61,21 @@ class _Admin_TableState extends State<Admin_Table> {
     }
   }
 
-Future fetchTableStatus() async {
-  var url = Uri.parse('http://127.0.0.1:5000/table/table_status');
-  var response = await http.get(url);
+  Future fetchTableStatus() async {
+    var url = Uri.parse('http://127.0.0.1:5000/table/table_status');
+    var response = await http.get(url);
 
-  if (response.statusCode == 200) {
-    var data = jsonDecode(response.body) as List;
-    setState(() {
-      // อัปเดต tableStatus ให้ตรงกับข้อมูลที่ได้รับจาก API
-      tableStatus = data.map((table) => table['status_table'] == 'ไม่ว่าง').toList();
-    });
-  } else {
-    throw Exception('Failed to load table status');
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body) as List;
+      setState(() {
+        // อัปเดต tableStatus ให้ตรงกับข้อมูลที่ได้รับจาก API
+        tableStatus =
+            data.map((table) => table['status_table'] == 'ไม่ว่าง').toList();
+      });
+    } else {
+      throw Exception('Failed to load table status');
+    }
   }
-}
-
-
-
 
   void updateTableStatus(int index, bool isOccupied) {
     setState(() {

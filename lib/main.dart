@@ -14,6 +14,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Workshop2',
-        home: OrderStatusScreen(orderId: 5));
+        home: MainMenu());
   }
 }

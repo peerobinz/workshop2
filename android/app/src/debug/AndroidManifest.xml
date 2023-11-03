@@ -5,3 +5,14 @@
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
+
+<activity android:name=".MainActivity">
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        
+        <!-- สมมติว่า myapp เป็น schema และ mainmenu เป็น host -->
+        <data android:scheme="myapp" android:host="MainMenu" />
+    </intent-filter>
+</activity>
