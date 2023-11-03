@@ -10,8 +10,8 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  // Initialize the selectedMenuItems list
-  final List<dynamic> selectedMenuItems = [];
+  List<dynamic> selectedMenuItems = []; // Initialize the selectedMenuItems list
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +38,9 @@ class _MainMenuState extends State<MainMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => User_menu_Order()),
+                          builder: (context) => User_menu_Order(
+                                selectedMenuItems: selectedMenuItems,
+                              )),
                     );
                   },
                   style: ButtonStyle(
@@ -63,9 +65,7 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              UserStatus(selectedMenuItems: selectedMenuItems)),
+                      MaterialPageRoute(builder: (context) => UserStatus()),
                     );
                   },
                   style: ButtonStyle(

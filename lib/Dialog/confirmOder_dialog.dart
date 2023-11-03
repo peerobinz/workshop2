@@ -17,11 +17,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   void initState() {
     super.initState();
     // เมื่อแสดง Dialog เสร็จแล้ว
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) =>
-              UserStatus(selectedMenuItems: widget.selectedMenuItems),
+          builder: (context) => UserStatus(),
         ),
       );
     });
