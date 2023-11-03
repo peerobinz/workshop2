@@ -212,10 +212,6 @@ import 'dart:convert';
 //   // ... add more colors as needed
 // }
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import 'package:workshop2test/Dialog/confirmOder_dialog.dart';
 
 class OrderConfirm extends StatefulWidget {
