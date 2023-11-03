@@ -13,14 +13,18 @@ class ConfirmationDialog extends StatefulWidget {
 }
 
 class _ConfirmationDialogState extends State<ConfirmationDialog> {
+  late List<dynamic> selectedMenuItems;
   @override
   void initState() {
     super.initState();
+    selectedMenuItems = widget.selectedMenuItems;
     // เมื่อแสดง Dialog เสร็จแล้ว
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserStatus(),
+          builder: (context) => OrderStatusScreen(
+            orderId: 5,
+          ),
         ),
       );
     });

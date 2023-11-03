@@ -65,7 +65,10 @@ class _MainMenuState extends State<MainMenu> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => UserStatus()),
+                      MaterialPageRoute(
+                          builder: (context) => const OrderStatusScreen(
+                                orderId: 5,
+                              )),
                     );
                   },
                   style: ButtonStyle(
