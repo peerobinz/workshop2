@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
+import 'package:workshop2test/screen/User_PeymentSC.dart';
 import 'package:workshop2test/tester/test.dart';
 
 void main() {
@@ -14,6 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Workshop2',
-        home: MainMenu());
+        home: PaymentPage(
+          orderId: 6,
+        ));
   }
 }
