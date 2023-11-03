@@ -40,7 +40,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
 
   Future<void> submitOrder() async {
     var data = jsonEncode(<String, dynamic>{
-      'table_id': '5', // ต้องแทนที่ด้วย ID ของโต๊ะที่เกี่ยวข้อง
+      'table_id': '7', // ต้องแทนที่ด้วย ID ของโต๊ะที่เกี่ยวข้อง
       'items': widget.selectedMenuItems.map((menuItem) {
         return {
           'item_name': menuItem['item_name'],
