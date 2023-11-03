@@ -140,7 +140,7 @@ class _Admin_QueueState extends State<Admin_Queue> {
                                         child: const Text(
                                           'ดูรายละเอียด',
                                           style: TextStyle(
-                                            fontSize: 14.0,
+                                            fontSize: 12.0,
                                           ),
                                         ),
                                       ),

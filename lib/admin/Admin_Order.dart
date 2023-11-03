@@ -1,248 +1,190 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:workshop2test/Text/my_text.dart';
 
 class Admin_Order extends StatefulWidget {
-  const Admin_Order({Key? key}) : super(key: key);
-
   @override
   _Admin_OrderState createState() => _Admin_OrderState();
 }
 
 class _Admin_OrderState extends State<Admin_Order> {
-  String selectedDropdownValue1 = 'โต๊ะ 1';
-  String selectedDropdownValue2 = 'สถานะ';
-  bool isSelected = false;
+  String selectedTable = '1';
+  String selectedStatus = 'กำลังปรุง';
+
+  // Dummy data for the table
+  List<Map<String, dynamic>> orders = [
+    {"table": "1", "item": "อาหาร A", "status": "กำลังปรุง"},
+    {"table": "2", "item": "อาหาร B", "status": "สริฟแล้ว"},
+    {"table": "3", "item": "อาหาร C", "status": "ยกเลิก"},
+    // Add more orders here
+  ];
+
+  // Function to filter orders by status
+  List<Map<String, dynamic>> getFilteredOrders() {
+    if (selectedStatus == 'ทั้งหมด') {
+      return orders;
+    } else {
+      return orders.where((order) => order['status'] == selectedStatus).toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Call this function to get filtered list based on the selected status
+    List<Map<String, dynamic>> filteredOrders = getFilteredOrders();
+
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          // สำหรับ DropdownButton "โต๊ะ"
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 26.0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0, vertical: 4.0), // เพิ่ม padding หากจำเป็น
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Dropdown for Tables
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.tabelGreen),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  icon: const Icon(Icons.arrow_drop_down,
-                      color: AppColors.buttonEdit),
-                  style: const TextStyle(
-                      color:
-                          AppColors.buttonEdit), // สีข้อความของ DropdownButton
-                  dropdownColor:
-                      Colors.white, // สีพื้นหลังของตัวเลือกใน DropdownMenu
-                  value: selectedDropdownValue1,
+                  value: selectedTable,
+                  icon: Icon(Icons.arrow_drop_down, color: AppColors.tabelGreen),
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedDropdownValue1 = newValue!;
+                      selectedTable = newValue!;
+                      // TODO: Update content based on selected table
                     });
                   },
-                  items: <String>['โต๊ะ 1', 'ปุ่ม 2', 'ปุ่ม 3']
+                  items: <String>['1', '2', '3', '4', '5']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Row(
-                        children: <Widget>[
-                          Image.asset('assets/icons8-table-60.png',
-                              width: 24,
-                              height: 24,
-                              color: AppColors
-                                  .buttonEdit), // สีไอคอนใน DropdownMenuItem
-                          const SizedBox(width: 8), // ระยะห่าง
-                          Text(
-                            value,
-                            style: const TextStyle(
-                              color: AppColors.buttonEdit,
-                            ), // สีข้อความใน DropdownMenuItem
-                          ),
-                        ],
-                      ),
+                      child: Text('โต๊ะ $value'),
                     );
                   }).toList(),
+                  style: TextStyle(color: Colors.black),
+                  dropdownColor: Colors.white,
                 ),
               ),
             ),
-          ),
-
-          const Spacer(),
-          Row(
-            children: [
-              // สำหรับปุ่ม "คิวอาร์โค้ด"
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: AppColors.tabelGreen,
-                  backgroundColor: AppColors.tabelGreen,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                onPressed: () {
-                  // โค้ดของคุณ...
-                },
-                child: const Row(
-                  mainAxisSize:
-                      MainAxisSize.min, // ทำให้ Row มีขนาดพอดีกับเนื้อหา
-                  children: <Widget>[
-                    Text(
-                      'คิวอาร์โค้ด',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 8), // ระยะห่างระหว่างข้อความกับไอคอน
-                    Icon(Icons.print, color: Colors.white),
-                  ],
-                ),
+            // Dropdown for Status
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.tabelGreen),
+                borderRadius: BorderRadius.circular(5),
               ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  icon: const Icon(Icons.arrow_drop_down,
-                      color: AppColors.tabelGreen),
-                  value: selectedDropdownValue2,
+                  value: selectedStatus,
+                  icon: Icon(Icons.arrow_drop_down, color: AppColors.tabelGreen),
                   onChanged: (String? newValue) {
                     setState(() {
-                      selectedDropdownValue2 = newValue!;
+                      selectedStatus = newValue!;
+                      // Update the filtered list when status changes
+                      filteredOrders = getFilteredOrders();
                     });
                   },
-                  items: <String>['สถานะ', 'ปุ่ม 2', 'ปุ่ม 3']
+                  items: <String>['ทั้งหมด', 'กำลังปรุง', 'สริฟแล้ว', 'ยกเลิก']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
                         value,
-                        style: const TextStyle(
-                          color: AppColors.tabelGreen,
+                        style: TextStyle(
+                          color: getStatusColor(value), // Set text color based on status
                         ),
                       ),
                     );
                   }).toList(),
+                  style: TextStyle(color: Colors.black),
+                  dropdownColor: Colors.white,
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment
-              .start, // จัดให้เนื้อหาใน Column เริ่มจากด้านซ้าย
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(
-                  left: 50.0), // ปรับตามขนาดของคอลัมน์แรกในตาราง
-              child: Text(
-                'ครั้งที่ 1',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Table(
-              border: TableBorder.all(color: AppColors.errorColor),
-              columnWidths: {
-                0: const FixedColumnWidth(50),
-                1: const FixedColumnWidth(530),
-                2: const FixedColumnWidth(470),
-              },
-              children: [
-                TableRow(
-                  children: [
-                    TableCell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Radio<bool>(
-                          value: true,
-                          groupValue: true,
-                          onChanged: (bool? newValue) {
-                            setState(() {
-                              isSelected = !isSelected;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        color: AppColors.tabelOn,
-                        child: const Text(
-                          'รายการ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                          ),
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        color: AppColors.tabelOn,
-                        child: const Text(
-                          'สถานะ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                TableRow(
-                  children: [
-                    TableCell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Radio<bool>(
-                          value: true,
-                          groupValue: true,
-                          onChanged: (bool? newValue) {
-                            setState(() {
-                              isSelected = !isSelected;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    TableCell(
-                        child: Container(
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'กระเพราไก่',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                    )),
-                    TableCell(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'กำลังปรุง',
-                          style: TextStyle(
-                            color: AppColors.errorColorOrenc,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
           ],
         ),
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            double tableWidth = constraints.maxWidth * 0.93;
+            double tableHeight = constraints.maxHeight * 0.7;
+
+            return Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: tableWidth,
+                height: tableHeight,
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color.fromARGB(255, 184, 65, 26)),
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,
+                    dataTableTheme: DataTableThemeData(
+                      headingRowColor: MaterialStateProperty.all(
+                          const Color.fromARGB(137, 237, 99, 53)),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columnSpacing: 38.0,
+                      columns: const [
+                        DataColumn(label: Text('โต๊ะ', style: MyText.buttonpayment)),
+                        DataColumn(label: Text('รายการ', style: MyText.buttonpayment)),
+                        DataColumn(label: Text('สถานะ', style: MyText.buttonpayment)),
+                      ],
+                      rows: filteredOrders.map<DataRow>((order) {
+                        return DataRow(
+                          cells: [
+                            DataCell(
+                              SizedBox(
+                                width: tableWidth * 0.15,
+                                child: Text(order['table'], textAlign: TextAlign.center),
+                              ),
+                            ),
+                            DataCell(
+                              SizedBox(
+                                width: tableWidth * 0.25,
+                                child: Text(order['item'], textAlign: TextAlign.start),
+                              ),
+                            ),
+                            DataCell(
+                              SizedBox(
+                                width: tableWidth * 0.25,
+                                child: Text(order['status'], textAlign: TextAlign.start),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
+  }
+
+  Color getStatusColor(String status) {
+    switch (status) {
+      case 'กำลังปรุง':
+        return Colors.yellow.shade900;
+      case 'สริฟแล้ว':
+        return Colors.green;
+      case 'ยกเลิก':
+        return Colors.red;
+      default:
+        return Colors.black; // Default color if status doesn't match
+    }
   }
 }
 
@@ -251,6 +193,4 @@ class AppColors {
   static const Color tabelOn = Color(0xFFECAE7D);
   static const Color errorColor02 = Color(0xFFBBBBBB);
   static const Color errorColor = Color(0xFFB00020);
-  static const Color errorColorOrenc = Color(0xFFED6335);
-  static const Color buttonEdit = Color(0xFFEEB75D);
 }

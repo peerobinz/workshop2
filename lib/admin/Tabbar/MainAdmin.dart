@@ -52,7 +52,7 @@ class _MainAdminState extends State<MainAdmin>
                           builder: (context) => const Admin_CheckBill());
                     case 'order':
                       return MaterialPageRoute(
-                          builder: (context) => const Admin_Order());
+                          builder: (context) =>  Admin_Order());
                     case 'table':
                       return MaterialPageRoute(
                           builder: (context) => const Admin_Table());
