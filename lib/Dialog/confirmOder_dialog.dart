@@ -4,8 +4,12 @@ import 'package:workshop2test/screen/User_StatusSC.dart';
 
 class ConfirmationDialog extends StatefulWidget {
   final List<dynamic> selectedMenuItems;
+  final int orderId; // เพิ่มตัวแปรนี้
 
-  const ConfirmationDialog({Key? key, required this.selectedMenuItems})
+  const ConfirmationDialog(
+      {Key? key,
+      required this.selectedMenuItems,
+      required this.orderId}) // เพิ่ม orderId ที่นี่
       : super(key: key);
 
   @override
@@ -14,6 +18,7 @@ class ConfirmationDialog extends StatefulWidget {
 
 class _ConfirmationDialogState extends State<ConfirmationDialog> {
   late List<dynamic> selectedMenuItems;
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +28,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => OrderStatusScreen(
-            orderId: 5,
+            orderId: widget.orderId, // ใช้ orderId ที่รับมา
           ),
         ),
       );

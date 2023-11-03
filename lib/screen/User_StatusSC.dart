@@ -34,8 +34,11 @@ class _OrderStatusScreenState extends State<OrderStatusScreen> {
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
+      print('Data received from API: $data'); // พิมพ์ข้อมูลที่ได้รับ
       return data.map((item) => MenuItemStatus.fromJson(item)).toList();
     } else {
+      print(
+          'Failed to load order status: ${response.body}'); // พิมพ์ข้อความผิดพลาด
       throw Exception('Failed to load order status');
     }
   }
