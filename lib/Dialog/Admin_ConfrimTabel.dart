@@ -109,7 +109,7 @@ class ConfirmTable extends StatelessWidget {
                                 height: 200.0,
                                 child: QrImageView(
                                   data:
-                                      "",
+                                      "https://www.google.co.th/?hl=th/${index + 1}",
                                   version: QrVersions.auto,
                                   size: 200.0,
                                 ),
