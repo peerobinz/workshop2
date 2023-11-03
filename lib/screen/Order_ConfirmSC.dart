@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:workshop2test/Dialog/confirmOder_dialog.dart';
 import 'dart:convert';
-
-import 'package:workshop2test/Text/my_text.dart';
 import 'package:workshop2test/screen/User_menu_Order.dart';
 
 class OrderConfirm extends StatefulWidget {
@@ -17,6 +15,8 @@ class OrderConfirm extends StatefulWidget {
 }
 
 class _OrderConfirmState extends State<OrderConfirm> {
+  int? orderId; // สถานะสำหรับเก็บ orderId
+
   Future<String> fetchImageUrl(String itemName) async {
     final response = await http.get(
       Uri.parse('http://127.0.0.1:5000/menuitem/picture/$itemName'),
@@ -39,54 +39,60 @@ class _OrderConfirmState extends State<OrderConfirm> {
   }
 
   Future<void> submitOrder() async {
+    // สร้างรายการอาหารที่จะส่งไปยัง API
+    List<Map<String, dynamic>> orderItems =
+        widget.selectedMenuItems.map((menuItem) {
+      return {
+        'menu_item_id': menuItem['item_id'],
+        'quantity': 1, // ตั้งค่าจำนวนเป็น 1 หรือจำนวนที่ต้องการ
+        // ถ้ามีข้อมูลเพิ่มเติมที่จำเป็นสำหรับแต่ละรายการ สามารถเพิ่มที่นี่
+      };
+    }).toList();
+
+    // ข้อมูลที่จะส่งไปยัง API
     var data = jsonEncode(<String, dynamic>{
-      'table_id': '1', // ต้องแทนที่ด้วย ID ของโต๊ะที่เกี่ยวข้อง
-      'items': widget.selectedMenuItems.map((menuItem) {
-        return {
-          'item_name': menuItem['item_name'],
-          'quantity': 1, // หรือจำนวนที่เกี่ยวข้อง
-          // 'note_item': 'หมายเหตุเพิ่มเติมหากมี'
-        };
-      }).toList(),
+      'table_id': '5', // ต้องแทนที่ด้วย ID ของโต๊ะที่เกี่ยวข้อง
+      'items': orderItems, // รายการอาหารที่จะส่งไปยัง API
     });
 
-    var response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/order/create-and-add-items'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: data,
-    );
+    try {
+      var response = await http.post(
+        Uri.parse('http://127.0.0.1:5000/order/create-and-add-items'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: data,
+      );
 
-    if (response.statusCode == 201) {
-      var responseData = jsonDecode(response.body);
-      print('New order created with ID: ${responseData['message']}');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return ConfirmationDialog(
-              selectedMenuItems: widget.selectedMenuItems);
-        },
-      );
-    } else {
-      print('Failed to create order: ${response.body}');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('ผิดพลาด'),
-            content: Text('ไม่สามารถบันทึกการสั่งซื้อของคุณได้'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('ปิด'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+      if (response.statusCode == 201) {
+        var responseData = jsonDecode(response.body);
+        if (responseData['order_id'] != null) {
+          setState(() {
+            orderId = int.tryParse(responseData['order_id'].toString());
+          });
+          print('New order created with ID: $orderId');
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ConfirmationDialog(
+                  selectedMenuItems: widget.selectedMenuItems,
+                  orderId: orderId ??
+                      0 // ใช้การตรวจสอบค่า null และกำหนดค่า default ถ้าเป็น null
+                  );
+            },
           );
-        },
-      );
+        } else {
+          print('Response does not contain order_id');
+          // แสดงข้อความผิดพลาดถ้าไม่มี order_id ใน response
+        }
+      } else {
+        print('Failed to create order: ${response.body}');
+        // รายละเอียดการแสดง dialog ที่แจ้งผู้ใช้ว่าไม่สามารถสร้าง order ได้
+      }
+    } catch (e) {
+      print('Error occurred while submitting the order: $e');
+      // รายละเอียดการแสดง dialog ที่แจ้งผู้ใช้เกี่ยวกับข้อผิดพลาด
     }
   }
 
@@ -97,6 +103,10 @@ class _OrderConfirmState extends State<OrderConfirm> {
         .fold(0, (previousValue, element) => previousValue + element);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Order Confirmation'),
+        backgroundColor: AppColors.primaryColor,
+      ),
       body: Column(
         children: [
           SizedBox(height: 50.0),
@@ -117,7 +127,7 @@ class _OrderConfirmState extends State<OrderConfirm> {
                 ),
                 SizedBox(height: 20.0),
                 Text(
-                  'รายการอาหาร',
+                  'รายการที่เลือก',
                   style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w900,
@@ -234,38 +244,6 @@ class _OrderConfirmState extends State<OrderConfirm> {
       ),
     );
   }
-}
-
-@override
-Widget build(BuildContext context) {
-  return Dialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        const Icon(Icons.checklist,
-            size: 57, color: Color.fromARGB(255, 174, 13, 13)),
-        const SizedBox(height: 20),
-        const Text('ทำรายการเสร็จสิ้น', style: MyText.basic),
-        const SizedBox(height: 20),
-        const SizedBox(height: 10),
-      ],
-    ),
-  );
 }
 
 class AppColors {

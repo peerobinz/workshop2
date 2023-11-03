@@ -1,209 +1,189 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:workshop2test/Dialog/confirmPayment_dialog.dart';
+import 'package:workshop2test/screen/MainManuSC.dart';
 
-import 'package:workshop2test/Dialog/services_dialog.dart';
-import 'package:workshop2test/screen/User_PeymentSC.dart';
-
-class OrderStatusScreen extends StatefulWidget {
+class PaymentPage extends StatefulWidget {
   final num orderId;
 
-  const OrderStatusScreen({Key? key, required this.orderId}) : super(key: key);
+  const PaymentPage({Key? key, required this.orderId}) : super(key: key);
 
   @override
-  _OrderStatusScreenState createState() => _OrderStatusScreenState();
+  _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _OrderStatusScreenState extends State<OrderStatusScreen> {
-  Future<String> fetchImageUrl(String itemName) async {
+class _PaymentPageState extends State<PaymentPage> {
+  Future<PaymentSummary> fetchPaymentSummary() async {
     final response = await http.get(
-      Uri.parse('http://127.0.0.1:5000/menuitem/picture/$itemName'),
+      Uri.parse('http://127.0.0.1:5000/payment-summary/${widget.orderId}'),
     );
+
     if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      return data['item_picture_url'] ?? '';
+      return PaymentSummary.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load image URL for $itemName');
+      throw Exception('Failed to load payment summary');
     }
   }
 
-  Future<List<MenuItemStatus>> fetchOrderStatus() async {
-    final response = await http.get(
-      Uri.parse('http://127.0.0.1:5000/status/orderstatus/${widget.orderId}'),
-    );
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      return data.map((item) => MenuItemStatus.fromJson(item)).toList();
-    } else {
-      throw Exception('Failed to load order status');
-    }
+  String _getCurrentDateTime() {
+    return DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.notification_add), iconSize: 45,
-            color: AppColors.titlebar, // สามารถเปลี่ยนเป็นไอคอนที่คุณต้องการ
-            onPressed: () {
-              showDialog(
-                context: context, // ส่ง BuildContext ของคุณ
-                builder: (BuildContext context) {
-                  return ServicesDialog(); // เรียกใช้ Dialog ที่คุณสร้างไว้
-                },
-              );
-            },
-          ),
-          title: Text(
-            'สถานะ',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AppColors.titlebar,
-                fontSize: 30),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.receipt_long), iconSize: 45,
-              color: AppColors.titlebar, // สามารถเปลี่ยนเป็นไอคอนที่คุณต้องการ
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PaymentPage(
-                            selectedMenuItems: [],
-                          )), // แทนที่ NewScreen ด้วยหน้าจอที่คุณต้องการไป
-                );
-              },
-            ),
-          ],
-          backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          'ชำระเงิน',
+          style: TextStyle(
+              fontSize: 22,
+              color: AppColors.secondaryColor,
+              fontWeight: FontWeight.bold),
         ),
-        body: Center(
-          child: FutureBuilder<List<MenuItemStatus>>(
-            future: fetchOrderStatus(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text("Error: ${snapshot.error}");
-              } else if (!snapshot.hasData) {
-                return Text("No data found");
-              }
+      ),
+      body: FutureBuilder<PaymentSummary>(
+        future: fetchPaymentSummary(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text("Error: ${snapshot.error}");
+          } else if (!snapshot.hasData) {
+            return Text("No data found");
+          }
 
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  MenuItemStatus menuItemStatus = snapshot.data![index];
-                  return FutureBuilder<String>(
-                    future: fetchImageUrl(menuItemStatus.itemName),
-                    builder: (context, snapshot) {
-                      var imageUrl = snapshot.data ?? '';
-                      return Card(
-                        elevation: 4.0,
-                        margin: EdgeInsets.all(8.0),
-                        color: AppColors.card, // สีของการ์ด
-                        child: ListTile(
-                          leading: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: imageUrl.isNotEmpty
-                                ? Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(Icons.error);
-                                    },
-                                  )
-                                : Placeholder(),
-                          ),
-                          title: Text(menuItemStatus.itemName),
-                          subtitle: Text('หมายเหตุ: ${menuItemStatus.note}'),
-                          trailing: Text(
-                            menuItemStatus.status,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors
-                                      .statusColors[menuItemStatus.status] ??
-                                  Colors
-                                      .black, // เลือกสีตามสถานะหรือใช้สีดำเป็นค่าเริ่มต้น// สีของข้อความสถานะ
-                              fontSize: 18, // ขนาดของตัวหนังสือ
-                            ),
-                          ),
-                        ),
-                      );
+          PaymentSummary summary = snapshot.data!;
+          num vat = summary.totalPrice * 0.07;
+          num totalPriceWithVat = summary.totalPrice + vat;
+
+          return Column(
+            children: [
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'วันที่: ${_getCurrentDateTime().split(' ')[0]}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'เวลา: ${_getCurrentDateTime().split(' ')[1]}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: summary.items.length,
+                  itemBuilder: (context, index) {
+                    var item = summary.items[index];
+                    return ListTile(
+                      title: Text(
+                        item['menu_item_name'],
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      subtitle: Text('จำนวน: ${item['quantity']} '),
+                      trailing: Text('ราคา: ${item['item_total_price']} บาท'),
+                    );
+                  },
+                ),
+              ),
+              Text('ราคารวม: ${summary.totalPrice} THB',
+                  style: TextStyle(fontSize: 20)),
+              Text('VAT 7%: ${vat.toStringAsFixed(2)} THB',
+                  style: TextStyle(fontSize: 20)),
+              Text('รวมทั้งหมด: ${totalPriceWithVat.toStringAsFixed(2)} THB',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          );
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const ConfirmPaymentDialog();
                     },
                   );
                 },
-              );
-            },
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: 70, // กำหนดให้ปุ่มเต็มความกว้าง
-              height: 60.0, // กำหนดความสูงของปุ่ม
-              child: TextButton(
+                child: Text(
+                  'ยืนยันรายการ',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: AppColors.primaryColor, fixedSize: Size(200, 50)),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
                 onPressed: () {
-                  // ไม่มีการกระทำใดๆ เมื่อกด
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainMenu()),
+                  );
                 },
                 child: Text(
-                  'สั่งอาหาร',
-                  style: TextStyle(fontSize: 25),
+                  'กลับหน้าหลัก',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                 ),
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      AppColors.botton, // เปลี่ยนเป็นสีที่คุณต้องการ
-                  primary: Colors.white, // สีของข้อความ
-                  padding: EdgeInsets.symmetric(vertical: 15.0), // ขนาด padding
-                ),
+                style: ElevatedButton.styleFrom(
+                    primary: AppColors.errorColor02, fixedSize: Size(200, 50)),
               ),
-            ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
-class MenuItemStatus {
+class PaymentSummary {
   final num orderId;
-  final String itemName;
-  final String note;
-  final String status;
+  final List<dynamic> items;
+  final num totalPrice;
 
-  MenuItemStatus({
+  PaymentSummary({
     required this.orderId,
-    required this.itemName,
-    required this.note,
-    required this.status,
+    required this.items,
+    required this.totalPrice,
   });
 
-  factory MenuItemStatus.fromJson(Map<String, dynamic> json) {
-    return MenuItemStatus(
-      orderId: json['order_id'] as num,
-      itemName: json['menu_item_name'] as String,
-      note: json['note_item'] ??
-          'ไม่มีหมายเหตุ', // ใช้ค่าเริ่มต้นหาก note_item มีค่าเป็น null
-      status: json['item_status'] as String,
+  factory PaymentSummary.fromJson(Map<String, dynamic> json) {
+    return PaymentSummary(
+      orderId: json['order_id'],
+      items: json['items'],
+      totalPrice: json['total_price'],
     );
   }
 }
 
 class AppColors {
-  static const Color titlebar = Color(0xFF026D81);
-  static const Color tabelOn = Color(0xFFECAE7D);
-  static const Color errorColor02 = Color(0xFFBBBBBB);
+  static const Color primaryColor = Color(0xFF0E4E89);
+  static const Color secondaryColor = Color(0xFF026D81);
   static const Color errorColor = Color(0xFFB00020);
+  static const Color errorColor02 = Color(0xFFBBBBBB);
   static const Color errorColorOrenc = Color(0xFFED6335);
-  static const Color buttonEdit = Color(0xFFEEB75D);
-  static const Color card = Color(0xFFF1E6D9);
-  static const Color botton = Color(0xFF0E4E89);
-  static const Color textstatus = Color(0xFFEEB75D);
-  static const Map<String, Color> statusColors = {
-    'กําลังปรุง': Color(0xFFEEB75D), // สีสำหรับสถานะที่ 1
-    'เสิร์ฟแล้ว': Color(0xFF8DB5AD), // สีสำหรับสถานะที่ 2
-    'ยกเลิก': Color(0xFFB00020), // สีสำหรับสถานะที่ 3
-  };
+  static const Color errorColorGreen = Color(0xFF8DB5AD);
+  static const Color button2 = Color(0xFF8DB5AD);
 }

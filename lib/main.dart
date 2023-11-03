@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/screen/MainManuSC.dart';
-import 'package:workshop2test/tester/test.dart';
 
 void main() {
   runApp(MyApp());
