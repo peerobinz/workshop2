@@ -58,7 +58,7 @@ class _MainAdminState extends State<MainAdmin>
                           builder: (context) => const Admin_Table());
                     case 'queue':
                       return MaterialPageRoute(
-                          builder: (context) => const Admin_Queue());
+                          builder: (context) =>  Admin_Queue());
                     default:
                       return MaterialPageRoute(
                           builder: (context) => Container()); //หน้าเเรก

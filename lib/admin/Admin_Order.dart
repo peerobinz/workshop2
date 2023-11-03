@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workshop2test/Text/my_text.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Admin_Order extends StatefulWidget {
   @override
@@ -9,29 +11,90 @@ class Admin_Order extends StatefulWidget {
 class _Admin_OrderState extends State<Admin_Order> {
   String selectedTable = '1';
   String selectedStatus = 'กำลังปรุง';
+  List<Map<String, dynamic>> orders = [];
 
-  // Dummy data for the table
-  List<Map<String, dynamic>> orders = [
-    {"table": "1", "item": "อาหาร A", "status": "กำลังปรุง"},
-    {"table": "2", "item": "อาหาร B", "status": "สริฟแล้ว"},
-    {"table": "3", "item": "อาหาร C", "status": "ยกเลิก"},
-    // Add more orders here
-  ];
+  Future<void> fetchOrdersByTable(int tableId) async {
+    try {
+      final response = await http.get(
+          Uri.parse('http://127.0.0.1:5000/adminorders/showorders/$tableId'));
 
-  // Function to filter orders by status
-  List<Map<String, dynamic>> getFilteredOrders() {
-    if (selectedStatus == 'ทั้งหมด') {
-      return orders;
-    } else {
-      return orders.where((order) => order['status'] == selectedStatus).toList();
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            orders = List<Map<String, dynamic>>.from(data.map((item) {
+              return {
+                "id": item['id'], // ต้องมี key นี้ใน item
+                "table": item['table_id'].toString(),
+                "item":
+                    item['items'].map((i) => i['menu_item_name']).join(', '),
+                "status": item['status'],
+                "selected": false,
+              };
+            }));
+          });
+        }
+      } else {
+        throw Exception('Failed to load orders');
+      }
+    } catch (e) {
+      // Handle error
+      print(e);
+    }
+  }
+
+  Future<void> updateOrderItemStatus(int orderItemId, String newStatus) async {
+    final url = Uri.parse(
+        'http://127.0.0.1:5000/adminorders/update_orderitem_status/$orderItemId');
+    try {
+      final response = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'status': newStatus,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // อัปเดตสถานะใน local state หรือแสดง Snackbar ที่นี่
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Order status updated successfully')),
+        );
+      } else {
+        // แสดงข้อความผิดพลาดให้ผู้ใช้เห็น
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update order status')),
+        );
+      }
+    } catch (e) {
+      // แสดงข้อความผิดพลาดให้ผู้ใช้เห็น
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Call this function to get filtered list based on the selected status
-    List<Map<String, dynamic>> filteredOrders = getFilteredOrders();
+  void initState() {
+    super.initState();
+    fetchOrdersByTable(int.parse(selectedTable));
+  }
 
+  void updateOrderStatus(String newStatus) {
+    if (!mounted) return;
+
+    setState(() {
+      for (var order in orders) {
+        if (order['selected']) {
+          order['status'] = newStatus;
+        }
+      }
+    });
+  }
+
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -50,12 +113,15 @@ class _Admin_OrderState extends State<Admin_Order> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: selectedTable,
-                  icon: Icon(Icons.arrow_drop_down, color: AppColors.tabelGreen),
+                  icon:
+                      Icon(Icons.arrow_drop_down, color: AppColors.tabelGreen),
                   onChanged: (String? newValue) {
-                    setState(() {
-                      selectedTable = newValue!;
-                      // TODO: Update content based on selected table
-                    });
+                    if (newValue != null) {
+                      setState(() {
+                        selectedTable = newValue;
+                      });
+                      fetchOrdersByTable(int.parse(newValue));
+                    }
                   },
                   items: <String>['1', '2', '3', '4', '5']
                       .map<DropdownMenuItem<String>>((String value) {
@@ -79,22 +145,39 @@ class _Admin_OrderState extends State<Admin_Order> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: selectedStatus,
-                  icon: Icon(Icons.arrow_drop_down, color: AppColors.tabelGreen),
+                  icon:
+                      Icon(Icons.arrow_drop_down, color: AppColors.tabelGreen),
                   onChanged: (String? newValue) {
-                    setState(() {
-                      selectedStatus = newValue!;
-                      // Update the filtered list when status changes
-                      filteredOrders = getFilteredOrders();
-                    });
+                    if (selectedTable != null) {
+                      fetchOrdersByTable(int.parse(selectedTable));
+                    }
+
+// ในการอัปเดตสถานะ
+                    if (newValue != null) {
+                      for (var order in orders) {
+                        if (order['selected']) {
+                          // ตรวจสอบว่า 'id' มีค่าและเป็น int
+                          int? orderItemId =
+                              int.tryParse(order['id'].toString());
+                          if (orderItemId != null) {
+                            updateOrderItemStatus(orderItemId, newValue);
+                          } else {
+                            print('Order ID is not valid.');
+                          }
+                        }
+                      }
+                      updateOrderStatus(newValue);
+                    }
                   },
-                  items: <String>['ทั้งหมด', 'กำลังปรุง', 'สริฟแล้ว', 'ยกเลิก']
+                  items: <String>['ทั้งหมด', 'กำลังปรุง', 'เสริฟแล้ว', 'ยกเลิก']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
                         value,
                         style: TextStyle(
-                          color: getStatusColor(value), // Set text color based on status
+                          color: getStatusColor(
+                              value), // Set text color based on status
                         ),
                       ),
                     );
@@ -120,7 +203,8 @@ class _Admin_OrderState extends State<Admin_Order> {
                 width: tableWidth,
                 height: tableHeight,
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color.fromARGB(255, 184, 65, 26)),
+                  border:
+                      Border.all(color: const Color.fromARGB(255, 184, 65, 26)),
                 ),
                 child: Theme(
                   data: Theme.of(context).copyWith(
@@ -135,29 +219,62 @@ class _Admin_OrderState extends State<Admin_Order> {
                     child: DataTable(
                       columnSpacing: 38.0,
                       columns: const [
-                        DataColumn(label: Text('โต๊ะ', style: MyText.buttonpayment)),
-                        DataColumn(label: Text('รายการ', style: MyText.buttonpayment)),
-                        DataColumn(label: Text('สถานะ', style: MyText.buttonpayment)),
+                        DataColumn(
+                            label: Text('เลือก', style: MyText.buttonpayment)),
+                        DataColumn(
+                            label: Text('โต๊ะ', style: MyText.buttonpayment)),
+                        DataColumn(
+                            label: Text('รายการ', style: MyText.buttonpayment)),
+                        DataColumn(
+                            label: Text('สถานะ', style: MyText.buttonpayment)),
                       ],
-                      rows: filteredOrders.map<DataRow>((order) {
+                      rows: orders.map<DataRow>((order) {
                         return DataRow(
                           cells: [
                             DataCell(
+                              Checkbox(
+                                tristate: true,
+                                value: order['selected'] ?? false,
+                                onChanged: (bool? value) {
+                                  if (!mounted) return;
+
+                                  setState(() {
+                                    order['selected'] = value ?? false;
+                                  });
+
+                                  if (value == true) {
+                                    int? orderItemId =
+                                        int.tryParse(order['id'].toString());
+                                    if (orderItemId != null) {
+                                      updateOrderItemStatus(
+                                          orderItemId, selectedStatus);
+                                    } else {
+                                      // Handle the case where 'id' is not a valid integer
+                                      print('Order ID is not valid.');
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                            DataCell(
                               SizedBox(
                                 width: tableWidth * 0.15,
-                                child: Text(order['table'], textAlign: TextAlign.center),
+                                child: Text(order['table'],
+                                    textAlign: TextAlign.center),
                               ),
                             ),
                             DataCell(
                               SizedBox(
                                 width: tableWidth * 0.25,
-                                child: Text(order['item'], textAlign: TextAlign.start),
+                                child: Text(order['item'],
+                                    textAlign: TextAlign.start),
                               ),
                             ),
                             DataCell(
                               SizedBox(
                                 width: tableWidth * 0.25,
-                                child: Text(order['status'], textAlign: TextAlign.start),
+                                child: Text(order['status'],
+                                    textAlign: TextAlign.start),
                               ),
                             ),
                           ],
@@ -173,18 +290,18 @@ class _Admin_OrderState extends State<Admin_Order> {
       ),
     );
   }
+}
 
-  Color getStatusColor(String status) {
-    switch (status) {
-      case 'กำลังปรุง':
-        return Colors.yellow.shade900;
-      case 'สริฟแล้ว':
-        return Colors.green;
-      case 'ยกเลิก':
-        return Colors.red;
-      default:
-        return Colors.black; // Default color if status doesn't match
-    }
+Color getStatusColor(String status) {
+  switch (status) {
+    case 'กำลังปรุง':
+      return Colors.yellow.shade900;
+    case 'สริฟแล้ว':
+      return Colors.green;
+    case 'ยกเลิก':
+      return Colors.red;
+    default:
+      return Colors.black; // Default color if status doesn't match
   }
 }
 

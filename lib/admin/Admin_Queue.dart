@@ -12,10 +12,10 @@ class _Admin_QueueState extends State<Admin_Queue> {
   String selectedDropdownValue = 'ทั้งหมด';
 
   final List<Map<String, dynamic>> orders = [
-    {'table': '1', 'paymentStatus': 'Paid', 'receipt': 'View'},
+    {'table': '1', 'queue': 'สั่งอาหาร', 'receipt': 'View'},
     {
       'table': '2',
-      'paymentStatus': 'Unpaid',
+      'queue': 'เรียกพนักงาน',
       'receipt': 'View'
     }, // แถวข้อมูลใหม่ที่ถูกเพิ่ม
   ];
@@ -91,10 +91,10 @@ class _Admin_QueueState extends State<Admin_Queue> {
                     child: DataTable(
                       columns: const [
                         DataColumn(
-                            label: Text('             โต๊ะ',
+                            label: Text('           โต๊ะ',
                                 style: MyText.buttonpayment)),
                         DataColumn(
-                            label: Text('     รายการ ',
+                            label: Text('    รายการ ',
                                 style: MyText.buttonpayment)),
                         DataColumn(label: Text('  ')),
                       ],
@@ -113,7 +113,7 @@ class _Admin_QueueState extends State<Admin_Queue> {
                               SizedBox(
                                 width:
                                     tableWidth * 0.25, // ปรับขนาดตามความจำเป็น
-                                child: Text(order['paymentStatus'],
+                                child: Text(order['queue'],
                                     textAlign: TextAlign.start),
                               ),
                             ),
@@ -126,25 +126,7 @@ class _Admin_QueueState extends State<Admin_Queue> {
                                       .end, // จัดตำแหน่งให้ปุ่มอยู่ด้านขวา
                                   children: [
                                     // ปุ่มดูรายละเอียด
-                                    SizedBox(
-                                      width: 90.0,
-                                      height: 40.0,
-                                      child: TextButton(
-                                        onPressed: () {
-                                          // การดำเนินการเมื่อปุ่มถูกกด
-                                        },
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: Colors.white,
-                                          backgroundColor: AppColors.tabelGreen,
-                                        ),
-                                        child: const Text(
-                                          'ดูรายละเอียด',
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                   
                                     const SizedBox(
                                         width: 10), // ระยะห่างระหว่างปุ่ม
                                     // ปุ่มลบรายการ

@@ -21,6 +21,7 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
   final picker = ImagePicker();
   final itemNameController = TextEditingController();
   final itemPriceController = TextEditingController();
+  final imageUrlController = TextEditingController();
 
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -28,6 +29,8 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        imageUrlController.text =
+            pickedFile.path; // อัปเดต TextEditingController ด้วยเส้นทางไฟล์
       } else {
         print('No image selected.');
       }
@@ -36,15 +39,17 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
 
   Future<void> addItem() async {
     var url = Uri.parse('http://127.0.0.1:5000/adminstock/addstock');
-    var response = await http.post(url, body: json.encode({
-      'item_name': itemNameController.text,
-      'item_description': 'รายละเอียดสินค้า', // คุณอาจจะมีตัวแปรหรือ TextEditingController สำหรับสิ่งนี้
-      'item_price': itemPriceController.text,
-      'item_picture_url': _image?.path, // ตรวจสอบว่าการจัดการรูปภาพถูกต้อง
-      'category_id': selectedProduct // ตรวจสอบว่าค่านี้ถูกต้อง
-    }), headers: {
-      'Content-Type': 'application/json'
-    });
+    var response = await http.post(url,
+        body: json.encode({
+          'item_name': itemNameController.text,
+          'item_description':
+              'รายละเอียดสินค้า', // คุณอาจจะมีตัวแปรหรือ TextEditingController สำหรับสิ่งนี้
+          'item_price': itemPriceController.text,
+          'item_picture_url':
+              imageUrlController.text, // ใช้ URL จาก TextEditingController
+          'category_id': selectedProduct // ตรวจสอบว่าค่านี้ถูกต้อง
+        }),
+        headers: {'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
       // การจัดการหลังจากส่งข้อมูลสำเร็จ
@@ -55,7 +60,10 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
     }
   }
 
-  @override
+
+
+ @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -101,13 +109,10 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                           fit: BoxFit.cover,
                         ),
                 ),
-                child: _image == null
-                    ? const Icon(Icons.image, size: 100, color: AppColors.photo)
-                    : null,
               ),
             ),
             const SizedBox(height: 20),
-           Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('รายการ ',
@@ -116,7 +121,8 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                 SizedBox(
                   width: 330,
                   child: TextField(
-                    controller: itemNameController, // เชื่อมต่อกับ TextEditingController
+                    controller:
+                        itemNameController, // เชื่อมต่อกับ TextEditingController
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                     ),
@@ -134,7 +140,8 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                 SizedBox(
                   width: 330,
                   child: TextField(
-                    controller: itemPriceController, // เชื่อมต่อกับ TextEditingController
+                    controller:
+                        itemPriceController, // เชื่อมต่อกับ TextEditingController
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                     ),
@@ -142,6 +149,26 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('ลิ้งรูปภาพ ',
+                    style: TextStyle(
+                        color: AppColors.secondaryColor, fontSize: 20)),
+                SizedBox(
+                  width: 330,
+                  child: TextField(
+                    controller:
+                        imageUrlController, // เชื่อมต่อกับ TextEditingController
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -162,17 +189,17 @@ class _Admin_StockAddState extends State<Admin_StockAdd> {
                       value: selectedProduct,
                       isExpanded: true,
                       items: const [
-                         DropdownMenuItem<String>(
+                        DropdownMenuItem<String>(
                           value: '3',
-                          child: Text('3'),
+                          child: Text('003'),
                         ),
                         DropdownMenuItem<String>(
                           value: '1',
-                          child: Text('2'),
+                          child: Text('002'),
                         ),
                         DropdownMenuItem<String>(
                           value: '2',
-                          child: Text('1'),
+                          child: Text('001'),
                         ),
                       ],
                       hint: const Text('หมวดหมู่'),

@@ -24,7 +24,7 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
   String? itemName;
   double? itemPrice;
   String? imageUrl; // เพิ่มตัวแปรสำหรับ URL รูปภา
-
+  TextEditingController imageUrlController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -34,6 +34,9 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
           itemName = data['item_name'];
           itemPrice = data['item_price'].toDouble();
           selectedProduct = data['category_id'].toString();
+          imageUrl = data[
+              'item_picture_url']; // Assuming this is the correct key for the image URL
+
           // โหลดรูปภาพถ้ามี
         });
       }
@@ -46,8 +49,10 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        imageUrl = pickedFile.path; // อัปเดต imageUrl ด้วยเส้นทางรูปภาพใหม่
+        imageUrlController.text = imageUrl ?? ''; // อัปเดต controller
       } else {
-        print('No image selected.');
+        print('ไม่มีการเลือกรูปภาพ');
       }
     });
   }
@@ -173,6 +178,28 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                 ),
               ],
             ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('ลิ้งรูปภาพ ',
+                    style: TextStyle(
+                        color: AppColors.secondaryColor, fontSize: 20)),
+                SizedBox(
+                  width: 330,
+                  child: TextField(
+                    controller: imageUrlController, // ใช้ controller ที่นี่
+                    onChanged: (value) {
+                      imageUrl =
+                          value; // อัปเดตตัวแปร imageUrl เมื่อมีการเปลี่ยนแปลงในช่องข้อความ
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -270,6 +297,7 @@ class _Admin_StockEditState extends State<Admin_StockEdit> {
                               'item_name': itemName,
                               'item_price': itemPrice,
                               'category_id': int.parse(selectedProduct!),
+                              'item_picture_url': imageUrl,
                               // ส่งข้อมูลรูปภาพถ้ามี
                             });
                           }

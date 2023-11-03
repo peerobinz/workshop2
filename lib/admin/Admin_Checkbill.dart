@@ -5,6 +5,10 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:workshop2test/Text/my_text.dart';
 
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 class Admin_CheckBill extends StatefulWidget {
   const Admin_CheckBill({super.key});
 
@@ -25,6 +29,10 @@ class _Admin_CheckBillState extends State<Admin_CheckBill> {
     },
     // เพิ่มออเดอร์ตามต้องการ
   ];
+
+
+
+
 
   // ฟังก์ชันแสดงและพิมพ์ใบเสร็จ
   void _showAndPrintReceipt(String orderNumber) {
